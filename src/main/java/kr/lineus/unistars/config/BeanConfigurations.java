@@ -16,6 +16,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,13 +35,14 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.DefaultObjectWrapper;
+import kr.lineus.unistars.config.security.AuthenticationSuccessHandlerImpl;
 
 
 
 
 @Configuration
 @EnableWebSecurity
-@ComponentScan("ai.quadim.api")
+@ComponentScan("kr.lineus")
 @PropertySources({
     @PropertySource("classpath:application.properties"),
     @PropertySource(value = "file:./application_override.properties", ignoreResourceNotFound = true)
@@ -97,7 +100,6 @@ public class BeanConfigurations {
         return null;
     }
 
-
     @Bean
     public RestTemplate restTemplate() {	
         return new RestTemplate();
@@ -147,15 +149,23 @@ public class BeanConfigurations {
         
         Properties javaMailProperties = new Properties();
 
-        javaMailProperties.put("mail.smtp.host", config.EMAIL_SMTP_HOST);
-        javaMailProperties.put("mail.smtp.socketFactory.port", config.EMAIL_SMTP_PORT);
-        javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        //javaMailProperties.put("mail.smtp.host", config.EMAIL_SMTP_HOST);
+        //javaMailProperties.put("mail.smtp.socketFactory.port", config.EMAIL_SMTP_PORT);
+        //javaMailProperties.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
         javaMailProperties.put("mail.smtp.auth", "true");
-        javaMailProperties.put("mail.smtp.port", config.EMAIL_SMTP_PORT);
+        javaMailProperties.put("mail.smtp.starttls.enable", "true");
+        //javaMailProperties.put("mail.smtp.port", config.EMAIL_SMTP_PORT);       
         javaMailProperties.put("mail.debug", "true");
 
  
         mailSender.setJavaMailProperties(javaMailProperties);
         return mailSender;
     }
+    
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler() {
+        return new AuthenticationSuccessHandlerImpl();
+    }
+
+
 }

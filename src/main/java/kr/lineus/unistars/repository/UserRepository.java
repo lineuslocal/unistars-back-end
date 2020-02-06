@@ -10,5 +10,10 @@ import kr.lineus.unistars.entity.UserEntity;
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
 
+	boolean existsUserEntityByUsername(String username);
+	
+	UserEntity findByUsernameAndPassword(String username, String password);
+	
+	UserEntity findByUsername(String username);
 	
 }

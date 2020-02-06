@@ -1,16 +1,18 @@
 package kr.lineus.unistars.converter;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
+import kr.lineus.unistars.dto.User;
+import kr.lineus.unistars.entity.UserEntity;
 
 
-public class UserConverter {
+public class UserConverter extends BaseConverter {
 	
-	ModelMapper mapper = new ModelMapper();
+	public static UserEntity dtoToEntity(User dto) {
+		return map(dto, UserEntity.class);
+	}
 	
-	
+	public static User entityToDto(UserEntity e) {
+		return map(e, User.class);
+	}
 	
 
 }

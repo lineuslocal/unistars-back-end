@@ -1,10 +1,10 @@
 package kr.lineus.unistars;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import kr.lineus.unistars.entity.UserEntity;
-
+@EnableAutoConfiguration
 @SpringBootApplication
 public class ApiApplication {
 

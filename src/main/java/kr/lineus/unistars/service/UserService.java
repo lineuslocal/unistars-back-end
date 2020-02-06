@@ -1,24 +1,22 @@
 package kr.lineus.unistars.service;
 
 import kr.lineus.unistars.dto.User;
+import kr.lineus.unistars.exceptionhandler.AppException;
 
-public interface UserService {
+public interface UserService extends CRUDOperationService<User>, ControllerTestingService{
 	
 	//check if the user has already registered
-	boolean isUserExisting(String userId);
+	boolean exists(String userId);
 	
 	//send verification code
-	void sendVerificationCode(String userid);
-	
-	//save user
-	void save(User user);
+	boolean sendVerificationCode(String userid);
 	
 	//log the user in with a password
-	boolean authenticate(String userId, String password);
+	User find(String userId, String password);
 	
-	//get all
-	//count for health check
-	int count();
+	User register(User user, String pin) throws AppException;
+
+	User resetPassword(String username, String pin, String password) throws AppException;
 	
 	
 	

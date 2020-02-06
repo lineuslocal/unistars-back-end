@@ -4,7 +4,7 @@
  
 <body>
     <p>Dear ${name},</p>
-    <p>Your verification code is ${pin}</b></p>
+    <p>Your verification code is ${code}</b></p>
     <p>Kind regards,</p>
     <p>${signature}</p>
     <p>${location}</p>

@@ -17,15 +17,15 @@ public class UserEntity {
     @Id
     @GeneratedValue
     private UUID id;
-    
+    private String username;
 	private String email;
 	private String password;
-	private String fullName;
-	private String phoneNumber;
+	private String fullname;
+	private String phonenumber;
 	private String gender;
-	private String zipCode;
 	private String address;
 	private String city;
+	private String job;
 	private String birthdate;
 	private String roles;
 	private int level;

@@ -21,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 import kr.lineus.unistars.config.ConstantValue;
 import kr.lineus.unistars.config.MailConfig;
 import kr.lineus.unistars.converter.UserConverter;
+import kr.lineus.unistars.dto.Level;
 import kr.lineus.unistars.dto.Mail;
 import kr.lineus.unistars.dto.Pin;
 import kr.lineus.unistars.dto.User;
@@ -199,11 +200,10 @@ public class UserServiceImpl implements UserService {
 		dto.setBirthdate("1/1/1990");
 		dto.setCity("HCM");
 		dto.setGender("Male");
-		dto.setLevel(1);
 		dto.setPhonenumber("0907777777");
 		dto.setJob("Manager");
 		dto.setRoles("admin");
-		dto.setLevel(1);
+		dto.setLevel(Level.Advanced);
 		create(dto);
 
 

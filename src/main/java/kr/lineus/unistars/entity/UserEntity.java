@@ -3,10 +3,13 @@ package kr.lineus.unistars.entity;
 import java.util.UUID;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import kr.lineus.unistars.dto.Level;
 import lombok.Data;
 
 @Entity
@@ -28,7 +31,8 @@ public class UserEntity {
 	private String job;
 	private String birthdate;
 	private String roles;
-	private int level;
+	@Enumerated(EnumType.STRING)
+	private Level level;
 	
 	
 }

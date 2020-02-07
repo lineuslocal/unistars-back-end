@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
+import kr.lineus.unistars.dto.Level;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.entity.UserEntity;
 
@@ -23,7 +24,7 @@ public class UserConverterTest {
 		user.setBirthdate("1/1/1990");
 		user.setCity("HCM");
 		user.setGender("Male");
-		user.setLevel(1);
+		user.setLevel(Level.Advanced);
 		user.setPhonenumber("0907777777");
 		user.setJob("Software Engineer");
 		user.setRoles("admin");
@@ -52,7 +53,7 @@ public class UserConverterTest {
 		dto.setBirthdate("1/1/1990");
 		dto.setCity("HCM");
 		dto.setGender("Male");
-		dto.setLevel(1);
+		dto.setLevel(Level.Advanced);
 		dto.setPhonenumber("0907777777");
 		dto.setJob("Software Engineer");
 		dto.setRoles("admin");

@@ -6,10 +6,10 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-public class FAQSubject {
-	
-	private String id;	
+public class FAQProduct {
+
+	private String id;
 	private String name;
 	
-	List<FAQCategory> categories = new ArrayList<FAQCategory>();
+	List<FAQ> faqs = new ArrayList<FAQ>();
 }

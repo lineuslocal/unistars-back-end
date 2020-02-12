@@ -1,10 +1,12 @@
 package kr.lineus.unistars.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -27,7 +29,11 @@ public class FAQProductEntity {
 	@JoinColumn(name="category_id", nullable = false)
 	private FAQCategoryEntity category;
 	
-	@OneToMany(mappedBy = "product", cascade = {CascadeType.ALL})
-	List<FAQEntity> faqs;
+	@OneToMany(mappedBy = "product", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+	List<FAQEntity> faqs = new ArrayList<FAQEntity>();
 	
+	public void addFAQEntity(FAQEntity en) {
+		en.setProduct(this);
+		this.faqs.add(en);
+	}
 }

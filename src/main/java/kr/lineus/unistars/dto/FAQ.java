@@ -1,5 +1,6 @@
 package kr.lineus.unistars.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.EnumType;
@@ -14,9 +15,8 @@ public class FAQ {
 	private String id;
 	private String title;
 	private String content;
-	
-	@Enumerated(EnumType.STRING)
 	private Level level;
+	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private Date created_date;	
+	private LocalDate createdDate;	
 }

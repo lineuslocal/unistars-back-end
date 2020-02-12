@@ -6,6 +6,7 @@ import java.util.Properties;
 
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
+import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +166,12 @@ public class BeanConfigurations {
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new AuthenticationSuccessHandlerImpl();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+        return modelMapper;
     }
 
 

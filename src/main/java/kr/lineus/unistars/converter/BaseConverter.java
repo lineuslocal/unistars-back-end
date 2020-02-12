@@ -6,13 +6,40 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
+import org.modelmapper.TypeMap;
+import org.modelmapper.spi.SourceGetter;
 
-public class BaseConverter {
+import kr.lineus.unistars.dto.FAQSubject;
+import kr.lineus.unistars.entity.FAQSubjectEntity;
+
+public abstract class BaseConverter {
 	
-	protected static ModelMapper mapper= new ModelMapper();
+	static Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
+	static ModelMapper mapper= new ModelMapper();
 
+	/*
+	public static ModelMapper getMapper() {
+		
+		Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
+		TypeMap<FAQSubject, FAQSubjectEntity> typeMap = mapper.createTypeMap(FAQSubject.class, FAQSubjectEntity.class);
+		typeMap.addMappings(map -> {
+		    map.using(uuidConverter).map(FAQSubject::getId, FAQSubjectEntity::setId);
+		});
+		
+		
+		//mapper.createTypeMap(S, D);
+		return mapper;
+	}*/
+	
 	public static <T> T map(Object src, Class<T> className) {
+//		ModelMapper mapper= new ModelMapper();
+//		TypeMap<?, ?> typeMap = mapper.createTypeMap(src.getClass(), className);
+//		typeMap.addMappings(map -> {
+//		
+//		});
 		
 		return mapId(src, mapper.map(src, className));
 		

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,6 +23,8 @@ public class FAQSubjectEntity {
 	@GeneratedValue
 	private UUID id;	
 	private String name;
+	@Column(length = 50000)
+	private String note;
 	
 	@OneToMany(mappedBy = "subject", cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
 	List<FAQCategoryEntity> categories = new ArrayList<FAQCategoryEntity>();

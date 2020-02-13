@@ -11,32 +11,28 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import lombok.Data;
 
-@Data
 @Entity
-@Table(name = "category")
-public class FAQCategoryEntity {
+@Table(name = "faq_image")
+@Data
+public class FAQImageEntity {
 	@Id
 	@GeneratedValue
-	private UUID id;
-	private String name;
-	@Column(length = 50000)
-	private String note;
+	private UUID id;	
+	private String fileName;
+	private String fileType;
+	//@Lob
+	//private byte[] data;
 	
 	@ManyToOne
-	@JoinColumn(name = "subject_id", nullable = false)
-	private FAQSubjectEntity subject;
-	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "category", fetch = FetchType.EAGER)
-	private List<FAQProductEntity> products = new ArrayList<FAQProductEntity>();
-	
-	public void addFAQProductEntity(FAQProductEntity en) {
-		en.setCategory(this);
-		this.products.add(en);
-	}
-}
+	@JoinColumn(name="faq_id", nullable = false)
+	FAQEntity faq; 
+}	

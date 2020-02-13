@@ -1,10 +1,10 @@
 package kr.lineus.unistars.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
-
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -18,5 +18,9 @@ public class FAQ {
 	private Level level;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-	private LocalDate createdDate;	
+	private LocalDate createdDate;
+	
+	private List<Keyword> keywords = new ArrayList<Keyword>();
+	
+	private List<FAQImage> images = new ArrayList<FAQImage>();
 }

@@ -26,7 +26,7 @@ import kr.lineus.unistars.service.UserService;
 @RequestMapping("/api/user")
 public class UserController {
 
-public static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	public static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@Autowired
 	@Qualifier("userService")

@@ -17,7 +17,7 @@ import kr.lineus.unistars.entity.FAQSubjectEntity;
 
 public class BaseConverter {
 	
-	Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
+	public static Converter<String, UUID> uuidConverter = ctx -> ctx.getSource()!=null? UUID.fromString(ctx.getSource()) : null;
 	protected ModelMapper mapper= new ModelMapper();
 
 	/*

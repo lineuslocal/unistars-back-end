@@ -15,10 +15,10 @@ import org.modelmapper.spi.SourceGetter;
 import kr.lineus.unistars.dto.FAQSubject;
 import kr.lineus.unistars.entity.FAQSubjectEntity;
 
-public abstract class BaseConverter {
+public class BaseConverter {
 	
-	static Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
-	static ModelMapper mapper= new ModelMapper();
+	Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
+	protected ModelMapper mapper= new ModelMapper();
 
 	/*
 	public static ModelMapper getMapper() {
@@ -34,7 +34,7 @@ public abstract class BaseConverter {
 		return mapper;
 	}*/
 	
-	public static <T> T map(Object src, Class<T> className) {
+	public <T> T map(Object src, Class<T> className) {
 //		ModelMapper mapper= new ModelMapper();
 //		TypeMap<?, ?> typeMap = mapper.createTypeMap(src.getClass(), className);
 //		typeMap.addMappings(map -> {
@@ -46,7 +46,7 @@ public abstract class BaseConverter {
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected static <T> T mapId(Object src, Object dest) {
+	protected <T> T mapId(Object src, Object dest) {
 		try {
 			String methodName = "getId";
 			Method getIdMethod = src.getClass().getMethod(methodName);
@@ -70,7 +70,7 @@ public abstract class BaseConverter {
 		return (T) dest;
 	}
 	
-	public static <D, T> List<D> mapAll(final Collection<T> entityList, Class<D> outCLass) {
+	public <D, T> List<D> mapAll(final Collection<T> entityList, Class<D> outCLass) {
 		return entityList.stream()
 				.map(entity -> map(entity, outCLass))
 				.collect(Collectors.toList());

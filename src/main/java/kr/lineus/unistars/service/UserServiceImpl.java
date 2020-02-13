@@ -8,17 +8,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
-import javax.annotation.PostConstruct;
-
-import org.apache.tomcat.util.bcel.classfile.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
-import kr.lineus.unistars.config.ConstantValue;
 import kr.lineus.unistars.config.MailConfig;
 import kr.lineus.unistars.converter.UserConverter;
 import kr.lineus.unistars.dto.Level;
@@ -55,7 +49,7 @@ public class UserServiceImpl implements UserService {
 		
 		UserEntity en = userRepo.findByUsername(username);
 		if(en!=null) {
-			u = UserConverter.entityToDto(en);
+			u = UserConverter.getInstance().entityToDto(en);
 		}
 		
 		try {
@@ -109,7 +103,7 @@ public class UserServiceImpl implements UserService {
 	public User find(String userId, String password) {
 		UserEntity u = userRepo.findByUsernameAndPassword(userId, password);
 		if(u!=null) {
-			return UserConverter.entityToDto(userRepo.findByUsernameAndPassword(userId, password));
+			return UserConverter.getInstance().entityToDto(userRepo.findByUsernameAndPassword(userId, password));
 		} else {
 			return null;
 		}
@@ -127,14 +121,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> findAll() {
-		return UserConverter.mapAll(userRepo.findAll(), User.class);
+		return UserConverter.getInstance().mapAll(userRepo.findAll(), User.class);
 	}
 
 	@Override
 	public User findOneById(String id) {
 		Optional<UserEntity> userEntity = userRepo.findById(UUID.fromString(id));
 		if(userEntity.isPresent()) {
-			return UserConverter.map(userEntity.get(), User.class);
+			return UserConverter.getInstance().map(userEntity.get(), User.class);
 		} else {
 			return null;
 		}
@@ -142,15 +136,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User dto) {
-		UserEntity uEn = userRepo.save(UserConverter.dtoToEntity(dto));
-		return UserConverter.entityToDto(uEn);
+		UserEntity uEn = userRepo.save(UserConverter.getInstance().dtoToEntity(dto));
+		return UserConverter.getInstance().entityToDto(uEn);
 	}
 
 	@Override
 	public User update(String id, User dto) {
-		UserEntity uEn = UserConverter.dtoToEntity(dto);
+		UserEntity uEn = UserConverter.getInstance().dtoToEntity(dto);
 		uEn.setId(UUID.fromString(id));
-		return UserConverter.entityToDto(userRepo.save(UserConverter.dtoToEntity(dto)));
+		return UserConverter.getInstance().entityToDto(userRepo.save(UserConverter.getInstance().dtoToEntity(dto)));
 	}
 
 	@Override
@@ -226,7 +220,7 @@ public class UserServiceImpl implements UserService {
 			if(pin.isValid() && pin.getPin().equals(code)) {
 				UserEntity u = userRepo.findByUsername(username);
 				u.setPassword(password);
-				return UserConverter.entityToDto(userRepo.save(u));
+				return UserConverter.getInstance().entityToDto(userRepo.save(u));
 			} else {
 				if(!pin.isValid()) {
 					userIdAndPinMap.remove(username);

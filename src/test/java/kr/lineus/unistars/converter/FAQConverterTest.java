@@ -61,7 +61,7 @@ public class FAQConverterTest {
 		prodEn.addFAQEntity(faqEn);
 		
 		
-		FAQSubject sub = FAQConverter.faqSubjectEntityToDto(en);
+		FAQSubject sub = FAQConverter.getInstance().faqSubjectEntityToDto(en);
 		assertEquals(sub.getId(), en.getId().toString());
 		assertEquals(sub.getName(), en.getName().toString());
 		
@@ -124,24 +124,24 @@ public class FAQConverterTest {
 		prodEn.getFaqs().add(faq);
 		
 		
-		FAQSubjectEntity sub = FAQConverter.faqSubjectDtoToEntity(faqSubject);
+		FAQSubjectEntity sub = FAQConverter.getInstance().faqSubjectDtoToEntity(faqSubject);
 		assertEquals(sub.getId().toString(), faqSubject.getId().toString());
 		assertEquals(sub.getName(), faqSubject.getName().toString());
 		
 		
 		List<FAQCategoryEntity> catEns = sub.getCategories();
 		assertEquals(catEns.size(), 1);
-		assertEquals(catEns.get(0).getId(), faqCat.getId().toString());
+		assertEquals(catEns.get(0).getId().toString(), faqCat.getId());
 		assertEquals(catEns.get(0).getName(), faqCat.getName());
 		
 		List<FAQProductEntity> prods = catEns.get(0).getProducts();
 		assertEquals(prods.size(), 1);
-		assertEquals(prods.get(0).getId(), prodEn.getId().toString());
+		assertEquals(prods.get(0).getId().toString(), prodEn.getId().toString());
 		assertEquals(prods.get(0).getName(), prodEn.getName());
 		
 		List<FAQEntity> faqs = prods.get(0).getFaqs();
 		for(int i=0; i<faqs.size(); i++) {
-			assertEquals(faqs.get(i).getId(), prodEn.getFaqs().get(i).getId().toString());
+			assertEquals(faqs.get(i).getId().toString(), prodEn.getFaqs().get(i).getId().toString());
 			assertEquals(faqs.get(i).getContent(), prodEn.getFaqs().get(i).getContent());
 			assertEquals(faqs.get(i).getTitle(), prodEn.getFaqs().get(i).getTitle());
 			assertEquals(faqs.get(i).getLevel(), prodEn.getFaqs().get(i).getLevel());

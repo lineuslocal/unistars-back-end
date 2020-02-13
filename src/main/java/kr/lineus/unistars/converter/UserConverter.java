@@ -6,11 +6,21 @@ import kr.lineus.unistars.entity.UserEntity;
 
 public class UserConverter extends BaseConverter {
 	
-	public static UserEntity dtoToEntity(User dto) {
+	private static UserConverter instance; 
+	
+	public static UserConverter getInstance() {
+		if(instance==null) {
+			instance = new UserConverter();
+		}
+		return instance;
+	}
+	
+	
+	public UserEntity dtoToEntity(User dto) {
 		return map(dto, UserEntity.class);
 	}
 	
-	public static User entityToDto(UserEntity e) {
+	public User entityToDto(UserEntity e) {
 		return map(e, User.class);
 	}
 	

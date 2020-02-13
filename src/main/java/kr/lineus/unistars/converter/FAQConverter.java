@@ -13,41 +13,56 @@ import org.modelmapper.spi.DestinationSetter;
 import org.modelmapper.spi.SourceGetter;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import kr.lineus.unistars.dto.FAQ;
 import kr.lineus.unistars.dto.FAQCategory;
 import kr.lineus.unistars.dto.FAQProduct;
 import kr.lineus.unistars.dto.FAQSubject;
 import kr.lineus.unistars.entity.FAQCategoryEntity;
+import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQProductEntity;
 import kr.lineus.unistars.entity.FAQSubjectEntity;
 
-public class FAQConverter extends BaseConverter{
+public class FAQConverter extends BaseConverter {
 	
-	//static ModelMapper mapper =new ModelMapper();
-	public static FAQSubjectEntity faqSubjectDtoToEntity(FAQSubject dto) {
-//		
-//		TypeMap<FAQSubject, FAQSubjectEntity> typeMap = mapper.createTypeMap(FAQSubject.class, FAQSubjectEntity.class);
-//		Converter<String, UUID> uuidConverter = ctx -> UUID.fromString(ctx.getSource());
-//		typeMap.addMappings(map -> {
-//			map.using(ct -> ct.getSource());
-//		    map.using(uuidConverter).map(FAQSubject::getId, FAQSubjectEntity::setId);
-//		});
-//		mapper.getConfiguration()
-//         .setMatchingStrategy(MatchingStrategies.STRICT);
-//		return mapper.map(dto, FAQSubjectEntity.class);
+	private static FAQConverter instance;
+	
+	public static FAQConverter getInstance() {
+		if(instance==null) {
+			instance = new FAQConverter();
+		}
+		return instance;
+	}
+	
+	public FAQSubjectEntity faqSubjectDtoToEntity(FAQSubject dto) {
 		
+		mapper.createTypeMap(FAQSubject.class, FAQSubjectEntity.class).addMappings(map -> {
+		    map.using(uuidConverter).map(FAQSubject::getId, FAQSubjectEntity::setId);
+		});
+		
+		mapper.createTypeMap(FAQCategory.class, FAQCategoryEntity.class).addMappings(map -> {
+		    map.using(uuidConverter).map(FAQCategory::getId, FAQCategoryEntity::setId);
+		});
+		
+		mapper.createTypeMap(FAQProduct.class, FAQProductEntity.class).addMappings(map -> {
+		    map.using(uuidConverter).map(FAQProduct::getId, FAQProductEntity::setId);
+		});
+		
+		mapper.createTypeMap(FAQ.class, FAQEntity.class).addMappings(map -> {
+		    map.using(uuidConverter).map(FAQ::getId, FAQEntity::setId);
+		});
 		
 		return mapper.map(dto, FAQSubjectEntity.class);
 	}
 	
-	public static FAQSubject faqSubjectEntityToDto(FAQSubjectEntity e) {
+	public FAQSubject faqSubjectEntityToDto(FAQSubjectEntity e) {
 		return map(e, FAQSubject.class);
 	}
 	
-	public static List<FAQSubjectEntity> faqSubjectDtoToEntityList(List<FAQSubject> list){
+	public List<FAQSubjectEntity> faqSubjectDtoToEntityList(List<FAQSubject> list){
 		return list.stream().map(i -> { return faqSubjectDtoToEntity(i); }).collect(Collectors.toList());	
 	}
 	
-	public static List<FAQSubject> faqSubjectEntityToDtoList(List<FAQSubjectEntity> list){
+	public List<FAQSubject> faqSubjectEntityToDtoList(List<FAQSubjectEntity> list){
 		return list.stream().map(i -> { return faqSubjectEntityToDto(i); }).collect(Collectors.toList());	
 	}
 	

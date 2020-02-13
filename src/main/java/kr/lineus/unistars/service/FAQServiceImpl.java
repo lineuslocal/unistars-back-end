@@ -24,7 +24,7 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService{
 
 	@Override
 	public List<FAQSubject> loadAll() {
-		return FAQConverter.faqSubjectEntityToDtoList(faqSubjectRepo.findAll());
+		return FAQConverter.getInstance().faqSubjectEntityToDtoList(faqSubjectRepo.findAll());
 	}
 
 }

@@ -29,7 +29,7 @@ public class UserConverterTest {
 		user.setJob("Software Engineer");
 		user.setRoles("admin");
 		
-		User dto = UserConverter.entityToDto(user);
+		User dto = UserConverter.getInstance().entityToDto(user);
 		assertEquals(dto.getId(), user.getId().toString());
 		assertEquals(dto.getEmail(), user.getEmail());
 		assertEquals(dto.getFullname(), user.getFullname());
@@ -58,7 +58,7 @@ public class UserConverterTest {
 		dto.setJob("Software Engineer");
 		dto.setRoles("admin");
 		
-		UserEntity user = UserConverter.dtoToEntity(dto);
+		UserEntity user = UserConverter.getInstance().dtoToEntity(dto);
 		assertEquals(dto.getId(), user.getId().toString());
 		assertEquals(dto.getEmail(), user.getEmail());
 		assertEquals(dto.getFullname(), user.getFullname());

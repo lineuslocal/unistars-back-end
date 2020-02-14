@@ -15,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.lineus.unistars.config.MailConfig;
 import kr.lineus.unistars.converter.UserConverter;
-import kr.lineus.unistars.dto.Level;
+import kr.lineus.unistars.dto.UserLevel;
 import kr.lineus.unistars.dto.Mail;
-import kr.lineus.unistars.dto.Pin;
+import kr.lineus.unistars.dto.UserPin;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.entity.UserEntity;
 import kr.lineus.unistars.exceptionhandler.AppException;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private MailService mailService;
 	
-	Map<String, Pin> userIdAndPinMap = new ConcurrentHashMap<String, Pin>();
+	Map<String, UserPin> userIdAndPinMap = new ConcurrentHashMap<String, UserPin>();
 	
 	@Override
 	public boolean sendVerificationCode(String username) {	
@@ -56,12 +56,12 @@ public class UserServiceImpl implements UserService {
 			//try removing old pins
 			removeOldPins();
 			//reuse pin or create a new one
-			Pin code =null;
+			UserPin code =null;
 			if(userIdAndPinMap.containsKey(username)) {
 				code = userIdAndPinMap.get(username);
 				code.setAttempts(code.getAttempts()+1);
 			} else {
-				code = Pin.getOne();
+				code = UserPin.getOne();
 				userIdAndPinMap.put(username, code);
 			}
 			// limit to 5 attempts to protect our server from spamming
@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
 		
 	}
 
-	private void sendCodeByEmail(String email, String fullName, Pin code) {
+	private void sendCodeByEmail(String email, String fullName, UserPin code) {
 		Mail mail = new Mail();
 		mail.setMailFrom(mailConfig.EMAIL_SMTP_FROM_ADDRESS);
 		mail.setMailTo(email);
@@ -158,14 +158,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	private void removeOldPins() {
-		Predicate<Pin> isOld = p -> !Pin.isValid(p);
+		Predicate<UserPin> isOld = p -> !UserPin.isValid(p);
 		userIdAndPinMap.values().removeIf(isOld);
 	}
 
 	@Override
 	public User register(User user, String code) throws AppException {
 		
-		Pin pin = userIdAndPinMap.get(user.getUsername());
+		UserPin pin = userIdAndPinMap.get(user.getUsername());
 		if(pin!=null) {
 			if(pin.isValid() && pin.getPin().equals(code)) {
 				userIdAndPinMap.remove(user.getUsername());
@@ -197,13 +197,13 @@ public class UserServiceImpl implements UserService {
 		dto.setPhonenumber("0907777777");
 		dto.setJob("Manager");
 		dto.setRoles("admin");
-		dto.setLevel(Level.Advanced);
+		dto.setLevel(UserLevel.Advanced);
 		create(dto);
 
 
 		//register some pins in case we are testing the registration process
-		userIdAndPinMap.put("lineus.local@gmail.com", new Pin("999999", System.currentTimeMillis(), 1));
-		userIdAndPinMap.put("dummy@gmail.com", new Pin("888888", System.currentTimeMillis(), 1));
+		userIdAndPinMap.put("lineus.local@gmail.com", new UserPin("999999", System.currentTimeMillis(), 1));
+		userIdAndPinMap.put("dummy@gmail.com", new UserPin("888888", System.currentTimeMillis(), 1));
 		
 	}
 
@@ -215,7 +215,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User resetPassword(String username, String code, String password) throws AppException {
-		Pin pin = userIdAndPinMap.get(username);
+		UserPin pin = userIdAndPinMap.get(username);
 		if(pin!=null) {
 			if(pin.isValid() && pin.getPin().equals(code)) {
 				UserEntity u = userRepo.findByUsername(username);

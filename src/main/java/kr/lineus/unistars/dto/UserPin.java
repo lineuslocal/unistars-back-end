@@ -11,26 +11,26 @@ import lombok.experimental.Accessors;
 @Data    
 @NoArgsConstructor
 @AllArgsConstructor
-public class Pin {
+public class UserPin {
 	String pin;
 	long issueTime;
 	int attempts;
 	public static long aliveTime = 1*60*60*1000;
 	
 	
-	public static Pin getOne() {
+	public static UserPin getOne() {
 		
 		SecureRandom random = new SecureRandom();
 		int num = random.nextInt(100000);
 		String code = String.format("%06d", num);
-		return new Pin(code, System.currentTimeMillis(), 1);
+		return new UserPin(code, System.currentTimeMillis(), 1);
 	}
 	
 	public boolean isValid() {
 		return isValid(this);
 	}
 	
-	public static boolean isValid(Pin p) {
+	public static boolean isValid(UserPin p) {
 		return System.currentTimeMillis() - p.getIssueTime() < aliveTime;
 	}
 }

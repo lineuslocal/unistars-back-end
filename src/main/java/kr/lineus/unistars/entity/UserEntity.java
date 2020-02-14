@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import kr.lineus.unistars.dto.Level;
+import kr.lineus.unistars.dto.UserLevel;
 import lombok.Data;
 
 @Entity
@@ -32,7 +32,7 @@ public class UserEntity {
 	private String birthdate;
 	private String roles;
 	@Enumerated(EnumType.STRING)
-	private Level level;
+	private UserLevel level;
 	
 	
 }

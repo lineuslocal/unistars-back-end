@@ -19,7 +19,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "category")
+@Table(name = "faq_category")
 public class FAQCategoryEntity {
 	@Id
 	@GeneratedValue

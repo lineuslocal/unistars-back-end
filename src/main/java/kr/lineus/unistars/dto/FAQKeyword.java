@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 @Data
-public class Keyword {
+public class FAQKeyword {
 
     private String id;
     private String keyword;

@@ -15,12 +15,12 @@ public class FAQ {
 	private String id;
 	private String title;
 	private String content;
-	private Level level;
+	private UserLevel level;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate createdDate;
 	
-	private List<Keyword> keywords = new ArrayList<Keyword>();
+	private List<FAQKeyword> keywords = new ArrayList<FAQKeyword>();
 	
 	private List<FAQImage> images = new ArrayList<FAQImage>();
 }

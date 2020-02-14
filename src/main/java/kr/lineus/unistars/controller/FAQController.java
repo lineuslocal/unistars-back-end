@@ -31,8 +31,7 @@ public class FAQController {
 
 	@PostConstruct
 	public void init() {
-		service.beforeEveryTest();
-		
+		service.beforeEveryTest();	
 	}	
 	
 	@GetMapping(value = "/")

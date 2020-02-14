@@ -19,14 +19,14 @@ import kr.lineus.unistars.dto.FAQCategory;
 import kr.lineus.unistars.dto.FAQImage;
 import kr.lineus.unistars.dto.FAQProduct;
 import kr.lineus.unistars.dto.FAQSubject;
-import kr.lineus.unistars.dto.Keyword;
-import kr.lineus.unistars.dto.Level;
+import kr.lineus.unistars.dto.FAQKeyword;
+import kr.lineus.unistars.dto.UserLevel;
 import kr.lineus.unistars.entity.FAQCategoryEntity;
 import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQImageEntity;
 import kr.lineus.unistars.entity.FAQProductEntity;
 import kr.lineus.unistars.entity.FAQSubjectEntity;
-import kr.lineus.unistars.entity.KeywordEntity;
+import kr.lineus.unistars.entity.FAQKeywordEntity;
 import kr.lineus.unistars.repository.FAQSubjectRepository;
 import kr.lineus.unistars.repository.KeywordRepository;
 
@@ -45,9 +45,9 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 	public void beforeEveryTest() {
 
 		//add some keywords
-		List<KeywordEntity> keys = new ArrayList<KeywordEntity>(); 
+		List<FAQKeywordEntity> keys = new ArrayList<FAQKeywordEntity>(); 
 		for(int i=0; i <= 10;i++) {
-			KeywordEntity kw = new KeywordEntity();
+			FAQKeywordEntity kw = new FAQKeywordEntity();
 			kw.setKeyword("keyword" + i);
 			kw.setNote("note for keyword" + i);
 			keys.add(keywordRepo.save(kw));
@@ -70,10 +70,10 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 			FAQEntity faq = new FAQEntity();
 			faq.setContent("This is a dummy FAQ");
 			faq.setCreatedDate(LocalDate.now());
-			faq.setLevel(Level.Advanced);
+			faq.setLevel(UserLevel.Advanced);
 			faq.setTitle("title" + i);
 			
-			KeywordEntity k = keys.get(new Random(0).nextInt(5));
+			FAQKeywordEntity k = keys.get(new Random(0).nextInt(5));
 			faq.getKeywords().add(k);
 			
 			k =  keys.get(new Random(6).nextInt(9));

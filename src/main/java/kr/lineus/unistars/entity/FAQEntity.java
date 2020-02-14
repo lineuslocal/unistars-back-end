@@ -20,7 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import kr.lineus.unistars.dto.Level;
+import kr.lineus.unistars.dto.UserLevel;
 import lombok.Data;
 
 @Data
@@ -34,7 +34,7 @@ public class FAQEntity {
 	@Column(length = 50000)
 	private String content;
 	@Enumerated(EnumType.STRING)
-	private Level level;
+	private UserLevel level;
 	private boolean status;
 	private LocalDate createdDate = LocalDate.now();	
 	
@@ -49,7 +49,7 @@ public class FAQEntity {
 			joinColumns = {@JoinColumn(name="faq_id")},
 			inverseJoinColumns = {@JoinColumn(name="keyword_id")}
 	)
-	private List<KeywordEntity> keywords = new ArrayList<KeywordEntity>();
+	private List<FAQKeywordEntity> keywords = new ArrayList<FAQKeywordEntity>();
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "faq", cascade = CascadeType.ALL)
 	private List<FAQImageEntity> images = new ArrayList<FAQImageEntity>();

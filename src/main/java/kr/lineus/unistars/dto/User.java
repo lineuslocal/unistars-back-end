@@ -23,6 +23,6 @@ public class User {
 	private String birthdate;
 	private String job;
 	private String roles;
-	private Level level;
+	private UserLevel level;
 	
 }

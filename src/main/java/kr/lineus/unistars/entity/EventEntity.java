@@ -33,5 +33,5 @@ public class EventEntity {
 	private LocalTime endApplyDateTime;
 	@Column(length = 5000)
 	private String description;
-	
+
 }

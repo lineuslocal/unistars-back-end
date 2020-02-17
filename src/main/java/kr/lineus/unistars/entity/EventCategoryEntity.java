@@ -8,7 +8,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
 
 public class EventCategoryEntity {
 	@Id
@@ -18,6 +18,6 @@ public class EventCategoryEntity {
 	@Column(length = 50000)
 	private String content;
 	@Enumerated(EnumType.STRING)
-	private UserLevel level;
+	private ELevel level;
 	private boolean status;
 }

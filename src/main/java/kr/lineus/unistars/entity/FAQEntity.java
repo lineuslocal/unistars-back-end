@@ -20,7 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
 import lombok.Data;
 
 @Data
@@ -34,7 +34,7 @@ public class FAQEntity {
 	@Column(length = 50000)
 	private String content;
 	@Enumerated(EnumType.STRING)
-	private UserLevel level;
+	private ELevel level;
 	private boolean status;
 	private LocalDate createdDate = LocalDate.now();	
 	

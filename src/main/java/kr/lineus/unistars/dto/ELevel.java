@@ -1,6 +1,6 @@
 package kr.lineus.unistars.dto;
 
-public enum UserLevel {
+public enum ELevel {
 	PC,
 	Basic,
 	Advanced,

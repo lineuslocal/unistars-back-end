@@ -2,11 +2,12 @@ package kr.lineus.unistars.converter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.entity.UserEntity;
 
@@ -24,10 +25,10 @@ public class UserConverterTest {
 		user.setBirthdate("1/1/1990");
 		user.setCity("HCM");
 		user.setGender("Male");
-		user.setLevel(UserLevel.Advanced);
+		user.setLevel(ELevel.Advanced);
 		user.setPhonenumber("0907777777");
 		user.setJob("Software Engineer");
-		user.setRoles("admin");
+	
 		
 		User dto = UserConverter.getInstance().entityToDto(user);
 		assertEquals(dto.getId(), user.getId().toString());
@@ -37,9 +38,9 @@ public class UserConverterTest {
 		assertEquals(dto.getBirthdate(), user.getBirthdate());
 		assertEquals(dto.getCity(), user.getCity());
 		assertEquals(dto.getGender(), user.getGender());
-		assertEquals(dto.getLevel(), user.getLevel());
+		assertEquals(dto.getLevel(), user.getLevel().name());
 		assertEquals(dto.getPhonenumber(), user.getPhonenumber());
-		assertEquals(dto.getRoles(), user.getRoles());
+		
 	}
 
 	@Test
@@ -53,10 +54,9 @@ public class UserConverterTest {
 		dto.setBirthdate("1/1/1990");
 		dto.setCity("HCM");
 		dto.setGender("Male");
-		dto.setLevel(UserLevel.Advanced);
+		dto.setLevel(ELevel.Advanced.name());
 		dto.setPhonenumber("0907777777");
 		dto.setJob("Software Engineer");
-		dto.setRoles("admin");
 		
 		UserEntity user = UserConverter.getInstance().dtoToEntity(dto);
 		assertEquals(dto.getId(), user.getId().toString());
@@ -66,10 +66,10 @@ public class UserConverterTest {
 		assertEquals(dto.getBirthdate(), user.getBirthdate());
 		assertEquals(dto.getCity(), user.getCity());
 		assertEquals(dto.getGender(), user.getGender());
-		assertEquals(dto.getLevel(), user.getLevel());
+		assertEquals(dto.getLevel(), user.getLevel().name());
 		assertEquals(dto.getPhonenumber(), user.getPhonenumber());
 		assertEquals(dto.getJob(), user.getJob());
-		assertEquals(dto.getRoles(), user.getRoles());
+		
 	}
 
 }

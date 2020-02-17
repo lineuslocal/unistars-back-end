@@ -3,7 +3,7 @@ package kr.lineus.unistars.service;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.exceptionhandler.AppException;
 
-public interface UserService extends CRUDOperationService<User>, ControllerTestingService{
+public interface UserService extends CRUDOperationService<User>, ControllerTestingService {
 	
 	//check if the user has already registered
 	boolean exists(String userId);

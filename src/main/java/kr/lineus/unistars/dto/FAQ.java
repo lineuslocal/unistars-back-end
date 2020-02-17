@@ -15,7 +15,7 @@ public class FAQ {
 	private String id;
 	private String title;
 	private String content;
-	private UserLevel level;
+	private ELevel level;
 	
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate createdDate;

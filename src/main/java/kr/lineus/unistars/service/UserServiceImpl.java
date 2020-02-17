@@ -1,27 +1,38 @@
 package kr.lineus.unistars.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import kr.lineus.unistars.config.MailConfig;
 import kr.lineus.unistars.converter.UserConverter;
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
+import kr.lineus.unistars.dto.ERole;
 import kr.lineus.unistars.dto.Mail;
 import kr.lineus.unistars.dto.UserPin;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.entity.UserEntity;
+import kr.lineus.unistars.entity.UserRoleEntity;
 import kr.lineus.unistars.exceptionhandler.AppException;
 import kr.lineus.unistars.exceptionhandler.AppExceptionCode;
+import kr.lineus.unistars.repository.RoleRepository;
 import kr.lineus.unistars.repository.UserRepository;
 
 @Service
@@ -31,6 +42,12 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserRepository userRepo;
+	
+	@Autowired
+	RoleRepository roleRepo;
+	
+	@Autowired
+	PasswordEncoder encoder;
 	
 	@Autowired
 	private MailConfig mailConfig;
@@ -136,14 +153,50 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User create(User dto) {
-		UserEntity uEn = userRepo.save(UserConverter.getInstance().dtoToEntity(dto));
+		
+		UserEntity user = UserConverter.getInstance().dtoToEntity(dto);
+		user.setUserRoles(getRoles(dto.getRoles()));
+		UserEntity uEn = userRepo.save(user);
 		return UserConverter.getInstance().entityToDto(uEn);
+	}
+
+	private List<UserRoleEntity> getRoles(List<String> strRoles) {
+		List<UserRoleEntity> roles = new ArrayList<UserRoleEntity>();
+
+		if (strRoles == null) {
+			UserRoleEntity userRole = roleRepo.findByName(ERole.ROLE_USER)
+					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+			roles.add(userRole);
+		} else {
+			strRoles.forEach(role -> {
+				switch (role) {
+				case "admin":
+					UserRoleEntity adminRole = roleRepo.findByName(ERole.ROLE_ADMIN)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(adminRole);
+
+					break;
+				case "mod":
+					UserRoleEntity modRole = roleRepo.findByName(ERole.ROLE_MODERATOR)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(modRole);
+
+					break;
+				default:
+					UserRoleEntity userRole = roleRepo.findByName(ERole.ROLE_USER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(userRole);
+				}
+			});
+		}
+		return roles;
 	}
 
 	@Override
 	public User update(String id, User dto) {
 		UserEntity uEn = UserConverter.getInstance().dtoToEntity(dto);
 		uEn.setId(UUID.fromString(id));
+		uEn.setUserRoles(getRoles(dto.getRoles()));		
 		return UserConverter.getInstance().entityToDto(userRepo.save(UserConverter.getInstance().dtoToEntity(dto)));
 	}
 
@@ -196,8 +249,8 @@ public class UserServiceImpl implements UserService {
 		dto.setGender("Male");
 		dto.setPhonenumber("0907777777");
 		dto.setJob("Manager");
-		dto.setRoles("admin");
-		dto.setLevel(UserLevel.Advanced);
+		dto.setRoles(Arrays.asList("admin"));
+		dto.setLevel(ELevel.Advanced.name());
 		create(dto);
 
 
@@ -232,6 +285,6 @@ public class UserServiceImpl implements UserService {
 			throw AppExceptionCode.USER_PIN_NOTFOUND_400_4001;
 		}
 	}
-	
+
 
 }

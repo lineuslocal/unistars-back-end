@@ -20,7 +20,7 @@ import kr.lineus.unistars.dto.FAQImage;
 import kr.lineus.unistars.dto.FAQProduct;
 import kr.lineus.unistars.dto.FAQSubject;
 import kr.lineus.unistars.dto.FAQKeyword;
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
 import kr.lineus.unistars.entity.FAQCategoryEntity;
 import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQImageEntity;
@@ -70,7 +70,7 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 			FAQEntity faq = new FAQEntity();
 			faq.setContent("This is a dummy FAQ");
 			faq.setCreatedDate(LocalDate.now());
-			faq.setLevel(UserLevel.Advanced);
+			faq.setLevel(ELevel.Advanced);
 			faq.setTitle("title" + i);
 			
 			FAQKeywordEntity k = keys.get(new Random(0).nextInt(5));

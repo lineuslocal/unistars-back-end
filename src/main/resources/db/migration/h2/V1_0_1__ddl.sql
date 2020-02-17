@@ -123,3 +123,18 @@ CREATE TABLE event_survey (
 	event_id uuid NOT NULL REFERENCES event (id)	
 );
 
+CREATE TABLE role (
+	id bigint NOT NULL PRIMARY KEY,
+	name character varying(20)
+)
+
+CREATE TABLE user_role (
+	user_id uuid NOT NULL REFERENCES "user" (id),
+	role_id bigint NOT NULL REFERENCES role (id)
+);
+
+INSERT INTO roles(name) VALUES('ROLE_USER');
+INSERT INTO roles(name) VALUES('ROLE_MODERATOR');
+INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+
+

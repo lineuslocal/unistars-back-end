@@ -14,4 +14,10 @@ public class GeneralConfig {
 	
 	@Value("${errorlevel}")
 	public String ERROR_LEVEL;
+	
+	@Value("${app.jwtSecret}")
+	public String JWT_SECRET;
+	
+	@Value("${app.jwtExpirationMs}")
+	public String JWT_EXPIRATIONMS;
 }

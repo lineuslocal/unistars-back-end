@@ -1,6 +1,10 @@
 package kr.lineus.unistars.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.annotation.PostConstruct;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,11 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import kr.lineus.unistars.config.security.JwtUtils;
+import kr.lineus.unistars.config.security.UserDetailsImpl;
+import kr.lineus.unistars.dto.JwtResponse;
+import kr.lineus.unistars.dto.LoginRequest;
+import kr.lineus.unistars.dto.MessageResponse;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.exceptionhandler.AppException;
 import kr.lineus.unistars.exceptionhandler.AppExceptionCode;
 import kr.lineus.unistars.service.UserService;
 
+
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -31,6 +47,12 @@ public class UserController {
 	@Autowired
 	@Qualifier("userService")
 	UserService service;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
+	
+	@Autowired
+	JwtUtils jwtUtils;
 
 	@PostConstruct
 	public void init() {
@@ -43,7 +65,11 @@ public class UserController {
 		logger.info("Creating user : {}", user);
 		if(!service.exists(user.getEmail())) {
 			User result = service.register(user, pin);
-			return new ResponseEntity<User>(result, HttpStatus.CREATED);
+			if(result!=null) {
+				return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+			} else {
+				throw AppExceptionCode.USER_REGISTRATION_FAILED_500_4006;
+			}
 		} else {
 			throw AppExceptionCode.USER_ALREADY_REGISTERED_400_4000;
 		}
@@ -56,7 +82,8 @@ public class UserController {
 		new Thread(() -> {
 
 			if(service.sendVerificationCode(userId)) {
-				result.setResult(new ResponseEntity(HttpStatus.OK));
+				ResponseEntity<?> r = ResponseEntity.ok(new MessageResponse("Verification code sent!"));
+				result.setResult(r);
 			} else {
 				result.setErrorResult(AppExceptionCode.USER_SENDING_VERIFICATION_FAILED_400_4004);
 			}
@@ -68,11 +95,28 @@ public class UserController {
 	}
 		
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
-	public ResponseEntity<?> login(@RequestParam String username, @RequestParam String password) throws AppException {
-		logger.info("Authenticating user : {}", username);
-		User u = service.find(username, password);
+	public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws AppException {
+		logger.info("Authenticating user : {}", loginRequest.getUsername());
+		User u = service.find(loginRequest.getUsername(), loginRequest.getPassword());
 		if(u!=null) {
-			return new ResponseEntity<User>(u, HttpStatus.OK);
+			Authentication authentication = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+
+			SecurityContextHolder.getContext().setAuthentication(authentication);
+			String jwt = jwtUtils.generateJwtToken(authentication);
+			
+			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
+			List<String> roles = userDetails.getAuthorities().stream()
+					.map(item -> item.getAuthority())
+					.collect(Collectors.toList());
+
+			return ResponseEntity.ok(new JwtResponse(jwt, "Bearer",
+													 userDetails.getId(),
+													 userDetails.getUsername(), 
+													 userDetails.getEmail(),
+													 userDetails.getPhonenumber(),
+													 roles, userDetails.getLevel()));
+			
 		} else {
 			throw AppExceptionCode.USER_LOGIN_FAILED_400_4003;
 		}
@@ -84,7 +128,11 @@ public class UserController {
 		
 		if(service.exists(username)) {
 			User result = service.resetPassword(username, pin, password);
-			return new ResponseEntity<User>(result, HttpStatus.OK);
+			if(result!=null) {
+				return ResponseEntity.ok(new MessageResponse("Password changed successfully!"));
+			} else {
+				throw AppExceptionCode.USER_RESET_PASSWORD_FAILED_500_4007;
+			}
 		} else {
 			throw AppExceptionCode.USER_NOTFOUND_400_4005;
 		}

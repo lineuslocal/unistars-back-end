@@ -1,212 +1,121 @@
 package kr.lineus.unistars.config.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import kr.lineus.unistars.entity.UserEntity;
 
-public class UserDetailsImpl implements User<String>, UserDetails {
-    private static final long serialVersionUID = 1L;
-    private final String userId;
-    private final String username, password, salt, firstName, middleName, lastName, fullName, email, cellPhone;
-    private final boolean expired, temporaryPassword, admin;
-    private final List<GrantedAuthority> authorities = new ArrayList<>();
-    private List<String> companies = new ArrayList<>();
+public class UserDetailsImpl implements UserDetails {
+	private static final long serialVersionUID = 1L;
 
-    protected UserDetailsImpl() {
-        this.temporaryPassword = false;
-		userId = null;
-        username = password = salt = firstName = middleName = lastName = fullName = email = cellPhone = null;
-        expired = true;
-        admin = true;
-    }
+	private String id;
+	private String username;	
+	private String email;
+	private String phonenumber;
+	private List<String> roles;
+	private String level; 
+	
 
-    public UserDetailsImpl(UserEntity user) {
-    	this.temporaryPassword = false;
-    	expired = true;
-    	admin = true;
-    	
-    	
-    	//TODO: copy data from userentity to user
-    	userId = null;
-    	username = password = salt = firstName = middleName = lastName = fullName = email = cellPhone = null;
-    }
+	@JsonIgnore
+	private String password;
 
-    //Spring UserDetails
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>(authorities);
-    }
+	private Collection<? extends GrantedAuthority> authorities;
 
-    //Spring UserDetails
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    /**
-     * Returns the salt used when hashing the password.
-     *
-     * @return
-     */
-    public String getSalt() {
-        return salt;
-    }
-
-    //Spring UserDetails
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-
-    //Spring UserDetails
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    //Spring UserDetails
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    //Spring UserDetails
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return !expired;
-    }
-
-    //Spring UserDetails
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    /**
-     * Indicates if the password is temporary and should be changed
-     *
-     * @return true if the password is temporary
-     */
-    public boolean isTemporaryPassword() {
-        return temporaryPassword;
-    }
-
-    /**
-     * Indicates if the user is a global administrator
-     *
-     * @return true if the user is a global administrator
-     */
-    @Override
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    /**
-     * Provides the internal user id from the dto which is only used as an identifier within the application
-     *
-     * @return A numeric identifier for the user
-     */
-    @Override
-    public String getUserId() {
-        return userId;
-    }
-
-    @Override
-    public String getFirstName() {
-        return firstName;
-    }
-
-    @Override
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    @Override
-    public String getLastName() {
-        return lastName;
-    }
-
-    /**
-     * Users full name formated as: First Middle Last
-     *
-     * @return The users full name
-     */
-    public String getFullName() {
-        return fullName;
-    }
-
-    @Override
-    public String getEmail() {
-        return email;
-    }
-
-
-    public String getCellPhone() {
-        return cellPhone;
-    }
-
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((username == null) ? 0 : username.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        UserDetailsImpl other = (UserDetailsImpl) obj;
-        if (username == null) {
-            if (other.username != null)
-                return false;
-        } else if (!username.equals(other.username))
-            return false;
-        return true;
-    }
-
-    @Override
-    public String toString() {
-        return "UserDetailsImpl{" +
-                "userId='" + userId + '\'' +
-                ", username='" + username + '\'' +
-                ", salt='" + salt + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", fullName='" + fullName + '\'' +
-                ", email='" + email + '\'' +
-                ", cellPhone='" + cellPhone + '\'' +
-                ", expired=" + expired +
-                ", temporaryPassword=" + temporaryPassword +
-                ", admin=" + admin +
-                ", authorities=" + authorities +
-                '}';
-    }
-
-	/**
-	 * @return the companies
-	 */
-	public List<String> getCompanies() {
-		return companies;
+	public UserDetailsImpl(String id, String username, String password, String email, String phonenumber, String level,
+			Collection<? extends GrantedAuthority> authorities) {
+		this.id = id;
+		this.username = username;
+		this.email = email;
+		this.password = password;
+		this.phonenumber = phonenumber;
+		this.authorities = authorities;
 	}
 
-	/**
-	 * @param companies the companies to set
-	 */
-	public void setCompanies(List<String> companies) {
-		this.companies = companies;
+	public static UserDetailsImpl build(UserEntity user) {
+		List<GrantedAuthority> authorities = user.getUserRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
+				.collect(Collectors.toList());
+
+		return new UserDetailsImpl(
+				user.getId().toString(), 
+				user.getUsername(), 
+				user.getPassword(),
+				user.getEmail(),
+				user.getPhonenumber(), 
+				user.getLevel().name(),
+				authorities);
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	@Override
+	public String getUsername() {
+		return username;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		UserDetailsImpl user = (UserDetailsImpl) o;
+		return Objects.equals(id, user.id);
+	}
+
+	public String getPhonenumber() {
+		return phonenumber;
+	}
+
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public String getLevel() {
+		return level;
 	}
 }

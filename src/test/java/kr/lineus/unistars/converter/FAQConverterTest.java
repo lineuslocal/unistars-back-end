@@ -13,7 +13,7 @@ import kr.lineus.unistars.dto.FAQ;
 import kr.lineus.unistars.dto.FAQCategory;
 import kr.lineus.unistars.dto.FAQProduct;
 import kr.lineus.unistars.dto.FAQSubject;
-import kr.lineus.unistars.dto.UserLevel;
+import kr.lineus.unistars.dto.ELevel;
 import kr.lineus.unistars.dto.User;
 import kr.lineus.unistars.entity.FAQCategoryEntity;
 import kr.lineus.unistars.entity.FAQEntity;
@@ -46,7 +46,7 @@ public class FAQConverterTest {
 		faqEn.setId(UUID.randomUUID());
 		faqEn.setContent("This is a dummy FAQ");
 		faqEn.setCreatedDate(LocalDate.now());
-		faqEn.setLevel(UserLevel.Advanced);
+		faqEn.setLevel(ELevel.Advanced);
 		faqEn.setTitle("title1");
 		faqEn.setProduct(prodEn);
 		prodEn.addFAQEntity(faqEn);
@@ -55,7 +55,7 @@ public class FAQConverterTest {
 		faqEn.setId(UUID.randomUUID());
 		faqEn.setContent("This is a dummy FAQ");
 		faqEn.setCreatedDate(LocalDate.now());
-		faqEn.setLevel(UserLevel.Advanced);
+		faqEn.setLevel(ELevel.Advanced);
 		faqEn.setTitle("title2");
 		faqEn.setProduct(prodEn);
 		prodEn.addFAQEntity(faqEn);
@@ -111,7 +111,7 @@ public class FAQConverterTest {
 		faq.setId(UUID.randomUUID().toString());
 		faq.setContent("This is a dummy FAQ");
 		faq.setCreatedDate(LocalDate.now());
-		faq.setLevel(UserLevel.Advanced);
+		faq.setLevel(ELevel.Advanced);
 		faq.setTitle("title1");
 		prodEn.getFaqs().add(faq);
 		
@@ -119,7 +119,7 @@ public class FAQConverterTest {
 		faq.setId(UUID.randomUUID().toString());
 		faq.setContent("This is a dummy FAQ");
 		faq.setCreatedDate(LocalDate.now());
-		faq.setLevel(UserLevel.Advanced);
+		faq.setLevel(ELevel.Advanced);
 		faq.setTitle("title2");
 		prodEn.getFaqs().add(faq);
 		

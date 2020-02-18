@@ -16,6 +16,7 @@ public class UserConverter extends BaseConverter {
 		return instance;
 	}
 
+	private UserConverter() {}
 
 	public UserEntity dtoToEntity(User dto) {
 		return map(dto, UserEntity.class);

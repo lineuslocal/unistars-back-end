@@ -12,6 +12,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,6 +58,23 @@ public class UserServiceImpl implements UserService {
 	private MailService mailService;
 	
 	Map<String, UserPin> userIdAndPinMap = new ConcurrentHashMap<String, UserPin>();
+	
+	@PostConstruct
+	public void doPostConstruct() {
+		if(roleRepo.count()==0) {
+			UserRoleEntity role = new UserRoleEntity();		
+			role = new UserRoleEntity();
+			role.setName(ERole.ROLE_USER);
+			roleRepo.save(role);
+			role = new UserRoleEntity();
+			role.setName(ERole.ROLE_ADMIN);
+			roleRepo.save(role);
+			role = new UserRoleEntity();
+			role.setName(ERole.ROLE_MODERATOR);
+			roleRepo.save(role);
+		}
+	}
+
 	
 	@Override
 	public boolean sendVerificationCode(String username) {	
@@ -283,6 +302,25 @@ public class UserServiceImpl implements UserService {
 			
 		} else {
 			throw AppExceptionCode.USER_PIN_NOTFOUND_400_4001;
+		}
+	}
+
+	
+	@Override
+	public boolean checkPIN(String userId, String code) {
+		UserPin pin = userIdAndPinMap.get(userId);
+		if(pin!=null) {
+			if(pin.isValid() && pin.getPin().equals(code)) {
+				return true;
+			} else {
+				if(!pin.isValid()) {
+					userIdAndPinMap.remove(userId);
+				}
+				return false;
+			}
+			
+		} else {
+			return false;
 		}
 	}
 

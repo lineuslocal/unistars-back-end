@@ -1,23 +1,29 @@
 package kr.lineus.unistars.entity;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
-import kr.lineus.unistars.dto.ELevel;
+import lombok.Data;
 
+@Data
+@Entity
+@Table(name = "event_category")
 public class EventCategoryEntity {
 	@Id
 	@GeneratedValue
 	private UUID id;
-	private String title;
-	@Column(length = 50000)
-	private String content;
-	@Enumerated(EnumType.STRING)
-	private ELevel level;
-	private boolean status;
+	private String categoryName;
+	private String paymentType;
+	@OneToMany(mappedBy = "category")
+	private Set<EventEntity> events = new HashSet<EventEntity>();
+	@OneToOne(mappedBy = "category")
+	private EventCategoryImageEntity image;
 }

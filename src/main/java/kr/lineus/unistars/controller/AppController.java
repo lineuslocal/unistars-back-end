@@ -8,12 +8,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@Controller
+@RestController
 public class AppController {
 
-    private static final Logger log = LoggerFactory.getLogger(HealthController.class);
+    private static final Logger log = LoggerFactory.getLogger(AppController.class);
 
 
     public static String applicationInstanceName = "Unistars back-end API";

@@ -75,7 +75,18 @@ public class UserController {
 		}
 	}
 	
-	@RequestMapping(value = "/verification/{userId}", method = RequestMethod.POST)
+	@RequestMapping(value = "/verify/{userId}/{pin}", method = RequestMethod.POST)
+	public ResponseEntity<?> checkPin(@PathVariable("userId") String userId, @PathVariable("pin") String pin) throws AppException {
+		logger.info("Checking user : {}/ pin: {}", userId, pin);	
+		boolean result = service.checkPIN(userId, pin);
+		if(result) {
+			return ResponseEntity.ok(new MessageResponse("PIN is valid!"));
+		} else {
+			throw AppExceptionCode.USER_PIN_INVALID_400_4002;
+		}
+	}
+	
+	@RequestMapping(value = "/verify/{userId}", method = RequestMethod.POST)
 	public DeferredResult<ResponseEntity<?>> sendVerificationCode(@PathVariable("userId") String userId) throws AppException {
 		logger.info("Request verification code for userId : {}", userId );
 		DeferredResult<ResponseEntity<?>> result = new DeferredResult<>();

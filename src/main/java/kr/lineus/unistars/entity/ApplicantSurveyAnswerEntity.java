@@ -6,26 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
-@Entity
-@Table(name = "faq_image")
 @Data
-public class FAQImageEntity {
+@Entity
+@Table(name = "applicant_survey_answer")
+public class ApplicantSurveyAnswerEntity {
 	@Id
 	@GeneratedValue
-	private UUID id;	
-	private String fileName;
-	private String fileType;
-	private String imagePath;
-	@Lob
-	private byte[] data;
-	
+	private UUID id;
 	@ManyToOne
-	@JoinColumn(name="faq_id", nullable = false)
-	FAQEntity faq; 
-}	
+	@JoinColumn(name = "applicant_id", nullable = false)
+	private ApplicantEntity applicant;
+	private String question;
+	private String answer;
+}

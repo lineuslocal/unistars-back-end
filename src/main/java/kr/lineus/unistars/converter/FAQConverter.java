@@ -58,6 +58,8 @@ public class FAQConverter extends BaseConverter {
 		return instance;
 	}
 	
+	private FAQConverter() {}
+	
 	public FAQSubjectEntity faqSubjectDtoToEntity(FAQSubject dto) {
 	    
 		FAQSubjectEntity subjectEntity = mapper.map(dto, FAQSubjectEntity.class);

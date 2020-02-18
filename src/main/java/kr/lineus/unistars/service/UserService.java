@@ -18,6 +18,6 @@ public interface UserService extends CRUDOperationService<User>, ControllerTesti
 
 	User resetPassword(String username, String pin, String password) throws AppException;
 	
-	
+	boolean checkPIN(String userId, String pin) throws AppException;
 	
 }

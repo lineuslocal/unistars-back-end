@@ -10,4 +10,5 @@ public class EventImage {
 	private String fileType;
 	private String imagePath;
 	private String imageType;
+	
 }

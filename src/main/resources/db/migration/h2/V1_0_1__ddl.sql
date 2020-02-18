@@ -24,14 +24,14 @@ CREATE TABLE faq_subject (
 CREATE TABLE faq_category (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
-    subject_id uuid NOT NULL REFERENCES subject (id),
+    subject_id uuid NOT NULL REFERENCES faq_subject (id),
     note text
 );
 
 CREATE TABLE faq_product (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
-    category_id uuid NOT NULL REFERENCES category (id),
+    category_id uuid NOT NULL REFERENCES faq_category (id),
     note text
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE faq (
     content text,
     status boolean,
     level character varying(20),
-    product_id uuid NOT NULL REFERENCES product (id),
+    product_id uuid NOT NULL REFERENCES faq_product (id),
     created_date DATE
 );
 
@@ -66,6 +66,29 @@ CREATE TABLE faq_keyword (
 	keyword_id uuid NOT NULL REFERENCES keyword (id)
 );
 
+
+
+
+CREATE TABLE event_category (
+	id uuid NOT NULL PRIMARY KEY,
+	category_name character varying(4096),
+	payment_type character varying(4096)
+);
+
+CREATE TABLE event (
+	id uuid NOT NULL PRIMARY KEY,
+	event_catalog_id uuid NOT NULL REFERENCES event_category (id),
+	event_name character varying(4096),
+	lecturer character varying(4096),
+	max_participant integer,
+	current_participant integer,
+	start_datetime TIMESTAMP,
+	end_datetime TIMESTAMP,
+	start_apply_datetime TIMESTAMP,
+	end_apply_datetime TIMESTAMP,
+	description text
+);
+
 CREATE TABLE event_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
@@ -76,44 +99,20 @@ CREATE TABLE event_image (
     data BLOB 
  );
 
-CREATE TABLE event_catalog_image (
+CREATE TABLE event_category_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
     file_type character varying(256),
-    event_catalog_id uuid NOT NULL REFERENCES event_catalog (id),
+    event_catalog_id uuid NOT NULL REFERENCES event_category (id),
     image_path character varying(4096),
     data BLOB 
  );
 
-
-CREATE TABLE event_category (
-	id uuid NOT NULL PRIMARY KEY,
-	category_name character varying(4096),
-	payment_type character varying(4096),
-	price DECIMAL (19,4),
-	price_unit character varying(10),
-	start_datetime TIMESTAMP,
-	end_datetime TIMESTAMP
-);
-
-CREATE TABLE event (
-	id uuid NOT NULL PRIMARY KEY,
-	event_name character varying(4096),
-	lecturer character varying(4096),
-	max_participant integer,
-	current_participant integer,
-	start_datetime TIMESTAMP,
-	end_datetime TIMESTAMP
-	start_apply_datetime TIMESTAMP,
-	end_apply_datetime TIMESTAMP,
-	description text
-);
-
-CREATE TABLE event_aditional_info (
+CREATE TABLE event_additional_info (
 	id uuid NOT NULL PRIMARY KEY,
 	question character varying(4096),
 	required boolean,
-	event_id uuid NOT NULL REFERENCES event (id),	
+	event_id uuid NOT NULL REFERENCES event (id)
 );
 
 CREATE TABLE event_survey (
@@ -124,17 +123,37 @@ CREATE TABLE event_survey (
 );
 
 CREATE TABLE role (
-	id bigint NOT NULL PRIMARY KEY,
+	id uuid NOT NULL PRIMARY KEY,
 	name character varying(20)
-)
+);
 
 CREATE TABLE user_role (
 	user_id uuid NOT NULL REFERENCES "user" (id),
-	role_id bigint NOT NULL REFERENCES role (id)
+	role_id uuid NOT NULL REFERENCES role (id)
 );
 
-INSERT INTO roles(name) VALUES('ROLE_USER');
-INSERT INTO roles(name) VALUES('ROLE_MODERATOR');
-INSERT INTO roles(name) VALUES('ROLE_ADMIN');
+CREATE TABLE applicant (
+	id uuid NOT NULL PRIMARY KEY,
+	user_id uuid NOT NULL REFERENCES "user" (id),
+	applied_date TIMESTAMP,
+	state character varying(20),
+	number_of_tickets integer
+);
+
+CREATE TABLE applicant_additionalinfo_answer (
+	id uuid NOT NULL PRIMARY KEY,
+	applicant_id uuid NOT NULL REFERENCES applicant (id),
+	question character varying(4096),
+	answer character varying(4096)
+);
+
+CREATE TABLE applicant_survey_answer (
+	id uuid NOT NULL PRIMARY KEY,
+	applicant_id uuid NOT NULL REFERENCES applicant (id),
+	question character varying(4096),
+	answer character varying(4096)
+);
+
+
 
 

@@ -9,4 +9,5 @@ public class EventCategoryImage {
 	private String fileName;
 	private String fileType;
 	private String imagePath;
+	
 }

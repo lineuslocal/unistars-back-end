@@ -50,7 +50,6 @@ CREATE TABLE faq_image (
     file_name character varying(4096),
     file_type character varying(256),
     faq_id uuid NOT NULL REFERENCES faq (id),
-    image_path character varying(4096),
     data BLOB 
  );
 
@@ -77,7 +76,7 @@ CREATE TABLE event_category (
 
 CREATE TABLE event (
 	id uuid NOT NULL PRIMARY KEY,
-	event_catalog_id uuid NOT NULL REFERENCES event_category (id),
+	category_id uuid NOT NULL REFERENCES event_category (id),
 	event_name character varying(4096),
 	lecturer character varying(4096),
 	max_participant integer,
@@ -95,7 +94,6 @@ CREATE TABLE event_image (
     file_type character varying(256),
     event_id uuid NOT NULL REFERENCES event (id),
     image_type character varying(256),
-    image_path character varying(4096),
     data BLOB 
  );
 
@@ -103,8 +101,7 @@ CREATE TABLE event_category_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
     file_type character varying(256),
-    event_catalog_id uuid NOT NULL REFERENCES event_category (id),
-    image_path character varying(4096),
+    category_id uuid NOT NULL REFERENCES event_category (id),
     data BLOB 
  );
 

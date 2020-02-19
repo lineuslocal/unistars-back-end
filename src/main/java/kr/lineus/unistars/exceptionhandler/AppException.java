@@ -39,6 +39,8 @@ public class AppException extends Exception {
 		this.link = link;
 	}
 
+
+	
 	public AppException() { }
 	
 	public static AppException getAppException(String errorResponse) {
@@ -99,6 +101,10 @@ public class AppException extends Exception {
 	public AppException setLink(String link) {
 		this.link = link;
 		return this;
+	}
+	
+	public AppException addMessageParams(Object... params) {
+		return new AppException(status, code, String.format(this.getMessage(), params), developerMessage, link);
 	}
 	
 }

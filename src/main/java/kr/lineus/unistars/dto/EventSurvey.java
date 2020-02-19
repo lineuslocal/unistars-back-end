@@ -5,9 +5,9 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class EventAdditionalInfo {
+public class EventSurvey {
 	private String id;
 	@NotBlank
 	private String question;
-	private boolean required;
+	private String selections;
 }

@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
@@ -23,5 +24,6 @@ public class EventAdditionalInfoEntity {
 	private boolean required;
 	@ManyToOne
 	@JoinColumn(name = "event_id", nullable = false)
+	@EqualsAndHashCode.Exclude 
 	private EventEntity event;
 }

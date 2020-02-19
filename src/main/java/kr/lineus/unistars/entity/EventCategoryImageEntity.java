@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 @Data
@@ -23,9 +24,9 @@ public class EventCategoryImageEntity {
 	private String fileName;
 	private String fileType;
 	@OneToOne
-	@JoinColumn(name = "event_catalog_id", unique = true, nullable = false, updatable = false)
+	@JoinColumn(name = "category_id", unique = true, nullable = false, updatable = false)
+	@EqualsAndHashCode.Exclude
 	private EventCategoryEntity category;
-	private String imagePath;
 	@Lob
 	private byte[] data; 
 }

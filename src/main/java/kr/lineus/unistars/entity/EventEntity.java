@@ -45,9 +45,12 @@ public class EventEntity {
 	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<EventImageEntity> images = new HashSet<>();
 	@ManyToOne
-	@JoinColumn(name="event_catalog_id", nullable = false)
+	@JoinColumn(name="category_id", nullable = false)
 	private EventCategoryEntity category;
 	
 	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private Set<EventAdditionalInfoEntity> additionalInfos = new HashSet<EventAdditionalInfoEntity>();
+	
+	@OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private Set<EventSurveyEntity> surveys = new HashSet<EventSurveyEntity>();
 }

@@ -8,6 +8,5 @@ public class EventCategoryImage {
 	private String id;
 	private String fileName;
 	private String fileType;
-	private String imagePath;
 	
 }

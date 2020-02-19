@@ -6,25 +6,24 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@Entity
-@Table(name = "faq_image")
 @Data
-public class FAQImageEntity {
+@Entity
+@Table(name = "event_survey")
+public class EventSurveyEntity {
+
 	@Id
 	@GeneratedValue
-	private UUID id;	
-	private String fileName;
-	private String fileType;
-	@Lob
-	private byte[] data;
-	
+	private UUID id;
+	private String question;
+	private String selections;
 	@ManyToOne
-	@JoinColumn(name="faq_id", nullable = false)
-	FAQEntity faq; 
-}	
+	@JoinColumn(name = "event_id", nullable = false)
+	@EqualsAndHashCode.Exclude 
+	private EventEntity event;	
+}

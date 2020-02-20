@@ -15,13 +15,16 @@ import kr.lineus.unistars.converter.EventConverter;
 import kr.lineus.unistars.dto.EEventImageType;
 import kr.lineus.unistars.dto.Event;
 import kr.lineus.unistars.dto.EventCategory;
+import kr.lineus.unistars.entity.ApplicantEntity;
 import kr.lineus.unistars.entity.EventAdditionalInfoEntity;
 import kr.lineus.unistars.entity.EventCategoryEntity;
 import kr.lineus.unistars.entity.EventCategoryImageEntity;
 import kr.lineus.unistars.entity.EventEntity;
 import kr.lineus.unistars.entity.EventImageEntity;
 import kr.lineus.unistars.entity.EventSurveyEntity;
+import kr.lineus.unistars.repository.ApplicantRepository;
 import kr.lineus.unistars.repository.EventCategoryRepository;
+import kr.lineus.unistars.repository.EventImageRepository;
 import kr.lineus.unistars.repository.EventRepository;
 
 @Service
@@ -34,6 +37,11 @@ public class EventServiceImpl implements EventService {
 	
 	@Autowired
 	EventRepository eventRepo;
+	
+	@Autowired
+	EventImageRepository eventImageRepo;
+	
+	ApplicantRepository applicantRepo;
 	
 	@Override
 	public void beforeEveryTest() {
@@ -165,13 +173,23 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public EventEntity getEvent(String eventId) {
-		// TODO Auto-generated method stub
-		return null;
+		return eventRepo.getOne(UUID.fromString(eventId));
 	}
 
 	@Override
 	public EventImageEntity saveEventImage(EventImageEntity i) {
-		// TODO Auto-generated method stub
+		return eventImageRepo.save(i);
+	}
+
+	@Override
+	public EventEntity saveEvent(EventEntity eventEntity) {
+		return eventRepo.save(eventEntity);
+	}
+
+	@Override
+	public List<ApplicantEntity> getApplicants(String eventId) {
+		
+		
 		return null;
 	}
 

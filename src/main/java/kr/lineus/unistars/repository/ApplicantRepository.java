@@ -5,8 +5,10 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import kr.lineus.unistars.entity.FAQKeywordEntity;
+import kr.lineus.unistars.entity.ApplicantEntity;
 
 @Repository
-public interface KeywordRepository extends JpaRepository<FAQKeywordEntity, UUID> {	
+public interface ApplicantRepository extends JpaRepository<ApplicantEntity, UUID> {	
+	
+	
 }

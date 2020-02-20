@@ -14,6 +14,14 @@ CREATE TABLE "user" (
 	level character varying(20)
 );
 
+CREATE TABLE user_image (
+    id uuid NOT NULL PRIMARY KEY,
+    file_name character varying(4096),
+    file_type character varying(256),
+    user_id uuid NOT NULL REFERENCES faq (id),
+    data BLOB 
+ );
+
 
 CREATE TABLE faq_subject (
     id uuid NOT NULL PRIMARY KEY,
@@ -132,6 +140,7 @@ CREATE TABLE user_role (
 CREATE TABLE applicant (
 	id uuid NOT NULL PRIMARY KEY,
 	user_id uuid NOT NULL REFERENCES "user" (id),
+	event_id uuid NOT NULL REFERENCES event (id),
 	applied_date TIMESTAMP,
 	state character varying(20),
 	number_of_tickets integer

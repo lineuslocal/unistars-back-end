@@ -34,5 +34,6 @@ public class User {
 	private String job;
 	private List<String> roles = new ArrayList<String>();
 	private String level;
+	private UserImage image;
 	
 }

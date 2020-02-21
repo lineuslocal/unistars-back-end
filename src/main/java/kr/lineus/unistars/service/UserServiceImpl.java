@@ -136,10 +136,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User find(String userId, String password) {
-		UserEntity u = userRepo.findByUsernameAndPassword(userId, password);
+	public UserEntity find(String username, String password) {
+		UserEntity u = userRepo.findByUsernameAndPassword(username, password);
 		if(u!=null) {
-			return UserConverter.getInstance().entityToDto(userRepo.findByUsernameAndPassword(userId, password));
+			return userRepo.findByUsernameAndPassword(username, password);
 		} else {
 			return null;
 		}
@@ -151,32 +151,31 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public boolean exists(String userId) {
-		return userRepo.existsUserEntityByUsername(userId);
+	public boolean exists(String username) {
+		return userRepo.existsUserEntityByUsername(username);
 	}
 
 	@Override
-	public List<User> findAll() {
-		return UserConverter.getInstance().mapAll(userRepo.findAll(), User.class);
+	public List<UserEntity> findAll() {
+		return userRepo.findAll();
 	}
 
 	@Override
-	public User findOneById(String id) {
+	public UserEntity findOneById(String id) {
 		Optional<UserEntity> userEntity = userRepo.findById(UUID.fromString(id));
 		if(userEntity.isPresent()) {
-			return UserConverter.getInstance().map(userEntity.get(), User.class);
+			return userEntity.get();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public User create(User dto) {
-		
+	public UserEntity save(User dto) {		
 		UserEntity user = UserConverter.getInstance().dtoToEntity(dto);
 		user.setUserRoles(getRoles(dto.getRoles()));
 		UserEntity uEn = userRepo.save(user);
-		return UserConverter.getInstance().entityToDto(uEn);
+		return uEn;
 	}
 
 	private List<UserRoleEntity> getRoles(List<String> strRoles) {
@@ -212,14 +211,6 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User update(String id, User dto) {
-		UserEntity uEn = UserConverter.getInstance().dtoToEntity(dto);
-		uEn.setId(UUID.fromString(id));
-		uEn.setUserRoles(getRoles(dto.getRoles()));		
-		return UserConverter.getInstance().entityToDto(userRepo.save(UserConverter.getInstance().dtoToEntity(dto)));
-	}
-
-	@Override
 	public void delete(String id) {
 		userRepo.deleteById(UUID.fromString(id));
 	}
@@ -235,13 +226,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User register(User user, String code) throws AppException {
+	public UserEntity register(User user, String code) throws AppException {
 		
 		UserPin pin = userIdAndPinMap.get(user.getUsername());
 		if(pin!=null) {
 			if(pin.isValid() && pin.getPin().equals(code)) {
 				userIdAndPinMap.remove(user.getUsername());
-				return create(user);
+				return save(user);
 			} else {
 				if(!pin.isValid()) {
 					userIdAndPinMap.remove(user.getUsername());
@@ -270,7 +261,7 @@ public class UserServiceImpl implements UserService {
 		dto.setJob("Manager");
 		dto.setRoles(Arrays.asList("admin"));
 		dto.setLevel(ELevel.Advanced.name());
-		create(dto);
+		save(dto);
 
 
 		//register some pins in case we are testing the registration process
@@ -286,13 +277,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User resetPassword(String username, String code, String password) throws AppException {
+	public UserEntity resetPassword(String username, String code, String password) throws AppException {
 		UserPin pin = userIdAndPinMap.get(username);
 		if(pin!=null) {
 			if(pin.isValid() && pin.getPin().equals(code)) {
 				UserEntity u = userRepo.findByUsername(username);
 				u.setPassword(password);
-				return UserConverter.getInstance().entityToDto(userRepo.save(u));
+				return userRepo.save(u);
 			} else {
 				if(!pin.isValid()) {
 					userIdAndPinMap.remove(username);
@@ -324,5 +315,13 @@ public class UserServiceImpl implements UserService {
 		}
 	}
 
+
+	@Override
+	public UserEntity find(String username) {
+		return userRepo.findByUsername(username);
+	}
+
+
+	
 
 }

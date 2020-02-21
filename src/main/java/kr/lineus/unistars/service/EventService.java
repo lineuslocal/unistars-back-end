@@ -6,14 +6,15 @@ import kr.lineus.unistars.dto.EEventImageType;
 import kr.lineus.unistars.dto.Event;
 import kr.lineus.unistars.dto.EventCategory;
 import kr.lineus.unistars.entity.ApplicantEntity;
+import kr.lineus.unistars.entity.EventCategoryEntity;
 import kr.lineus.unistars.entity.EventEntity;
 import kr.lineus.unistars.entity.EventImageEntity;
 
 public interface EventService extends ControllerTestingService {
 
-	List<EventCategory> loadAllCategories();
+	List<EventCategoryEntity> loadAllCategories();
 	
-	List<Event> loadAllEventsByCategory(String catId);
+	List<EventEntity> loadAllEventsByCategory(String catId);
 	
 	EventEntity getEvent(String eventId);
 
@@ -21,7 +22,12 @@ public interface EventService extends ControllerTestingService {
 	
 	EventEntity saveEvent(EventEntity eventEntity);
 	
-	List<ApplicantEntity> getApplicants(String eventId);
+	List<ApplicantEntity> getApplicantsByEventId(String eventId);
 	
+	ApplicantEntity saveApplicantEntity(ApplicantEntity appEn);
+	
+	List<ApplicantEntity> getApplicantsByUserId(String userId);
+
+	List<EventEntity> loadEventDetail(String eventId);
 
 }

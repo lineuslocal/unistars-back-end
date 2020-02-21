@@ -161,14 +161,14 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public List<EventCategory> loadAllCategories() {
-		List<EventCategoryEntity> catList = eventCatRepo.findAll();
-		return EventConverter.getInstance().eventCatEntityToDtoList(catList);
+	public List<EventCategoryEntity> loadAllCategories() {
+		return eventCatRepo.findAll();
+		
 	}
 
 	@Override
-	public List<Event> loadAllEventsByCategory(String categoryId) {
-		return EventConverter.getInstance().eventEntityToDtoList(eventRepo.findAllByCategoryId(UUID.fromString(categoryId)));
+	public List<EventEntity> loadAllEventsByCategory(String categoryId) {
+		return eventRepo.findAllByCategoryId(UUID.fromString(categoryId));
 	}
 
 	@Override
@@ -187,8 +187,22 @@ public class EventServiceImpl implements EventService {
 	}
 
 	@Override
-	public List<ApplicantEntity> getApplicants(String eventId) {
-		
+	public ApplicantEntity saveApplicantEntity(ApplicantEntity appEn) {
+		return applicantRepo.save(appEn);
+	}
+
+	@Override
+	public List<ApplicantEntity> getApplicantsByEventId(String eventId) {
+		return applicantRepo.findAllByEventId(eventId);
+	}
+
+	@Override
+	public List<ApplicantEntity> getApplicantsByUserId(String userId) {
+		return applicantRepo.findAllByUserId(userId);
+	}
+
+	@Override
+	public List<EventEntity> loadEventDetail(String eventId) {
 		
 		return null;
 	}

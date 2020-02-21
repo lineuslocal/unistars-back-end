@@ -2,15 +2,13 @@ package kr.lineus.unistars.service;
 
 import java.util.List;
 
-public interface CRUDOperationService<DTO> {
+public interface CRUDOperationService<En, DTO> {
 	
-    List<DTO> findAll();
+    List<En> findAll();
 
-    DTO findOneById(String id);
+    En findOneById(String id);
 
-    DTO create(DTO dto);
-
-    DTO update(String id, DTO dto);
+    En save(DTO obj);
 
     void delete(String id);
 

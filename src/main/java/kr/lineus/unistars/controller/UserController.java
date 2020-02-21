@@ -28,10 +28,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import kr.lineus.unistars.config.security.JwtUtils;
 import kr.lineus.unistars.config.security.UserDetailsImpl;
+import kr.lineus.unistars.converter.UserConverter;
 import kr.lineus.unistars.dto.JwtResponse;
 import kr.lineus.unistars.dto.LoginRequest;
 import kr.lineus.unistars.dto.MessageResponse;
 import kr.lineus.unistars.dto.User;
+import kr.lineus.unistars.entity.UserEntity;
 import kr.lineus.unistars.exceptionhandler.AppException;
 import kr.lineus.unistars.exceptionhandler.AppExceptionCode;
 import kr.lineus.unistars.service.UserService;
@@ -64,7 +66,7 @@ public class UserController {
 	public ResponseEntity<?> register(@PathVariable("pin") String pin, @RequestBody User user, UriComponentsBuilder ucBuilder) throws AppException {
 		logger.info("Creating user : {}", user);
 		if(!service.exists(user.getEmail())) {
-			User result = service.register(user, pin);
+			UserEntity result = service.register(user, pin);
 			if(result!=null) {
 				return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 			} else {
@@ -108,7 +110,7 @@ public class UserController {
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) throws AppException {
 		logger.info("Authenticating user : {}", loginRequest.getUsername());
-		User u = service.find(loginRequest.getUsername(), loginRequest.getPassword());
+		User u = UserConverter.getInstance().entityToDto(service.find(loginRequest.getUsername(), loginRequest.getPassword()));
 		if(u!=null) {
 			Authentication authentication = authenticationManager.authenticate(
 					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -138,7 +140,7 @@ public class UserController {
 		logger.info("Reset password for : {}", username);
 		
 		if(service.exists(username)) {
-			User result = service.resetPassword(username, pin, password);
+			User result = UserConverter.getInstance().entityToDto(service.resetPassword(username, pin, password));
 			if(result!=null) {
 				return ResponseEntity.ok(new MessageResponse("Password changed successfully!"));
 			} else {

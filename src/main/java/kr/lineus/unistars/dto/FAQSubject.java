@@ -10,6 +10,8 @@ public class FAQSubject {
 	
 	private String id;	
 	private String name;
+	private String krName;
+	private String note;
 	
 	List<FAQCategory> categories = new ArrayList<FAQCategory>();
 }

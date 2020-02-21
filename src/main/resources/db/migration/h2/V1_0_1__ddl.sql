@@ -26,12 +26,14 @@ CREATE TABLE user_image (
 CREATE TABLE faq_subject (
     id uuid NOT NULL PRIMARY KEY,
     name character varying NOT NULL,
+    kr_name character varying NOT NULL,
     note text
 );
 
 CREATE TABLE faq_category (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
+    kr_name character varying NOT NULL,
     subject_id uuid NOT NULL REFERENCES faq_subject (id),
     note text
 );
@@ -39,6 +41,7 @@ CREATE TABLE faq_category (
 CREATE TABLE faq_product (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
+    kr_name character varying NOT NULL,
     category_id uuid NOT NULL REFERENCES faq_category (id),
     note text
 );

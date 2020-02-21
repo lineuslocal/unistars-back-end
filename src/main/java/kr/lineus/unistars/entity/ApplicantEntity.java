@@ -30,7 +30,7 @@ public class ApplicantEntity {
 	@OneToOne
 	@JoinColumn(name = "user_id", nullable = false)
 	private UserEntity user;
-	private LocalDateTime appliedDate;
+	private LocalDateTime appliedDate = LocalDateTime.now();
 	private String state;
 	private int numberOfTickets;
 	@ManyToOne

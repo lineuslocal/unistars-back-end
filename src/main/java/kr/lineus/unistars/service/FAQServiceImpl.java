@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
+import kr.lineus.unistars.converter.EventConverter;
 import kr.lineus.unistars.converter.FAQConverter;
 import kr.lineus.unistars.dto.FAQ;
 import kr.lineus.unistars.dto.FAQCategory;
@@ -27,6 +27,8 @@ import kr.lineus.unistars.entity.FAQImageEntity;
 import kr.lineus.unistars.entity.FAQProductEntity;
 import kr.lineus.unistars.entity.FAQSubjectEntity;
 import kr.lineus.unistars.entity.FAQKeywordEntity;
+import kr.lineus.unistars.repository.FAQImageRepository;
+import kr.lineus.unistars.repository.FAQRepository;
 import kr.lineus.unistars.repository.FAQSubjectRepository;
 import kr.lineus.unistars.repository.KeywordRepository;
 
@@ -40,6 +42,10 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 	
 	@Autowired
 	KeywordRepository keywordRepo;
+	
+	FAQRepository faqRepo;
+	
+	FAQImageRepository faqImageRepo;
 	
 	@Override
 	public void beforeEveryTest() {
@@ -98,6 +104,8 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 	public void afterEveryTest() {
 		faqSubjectRepo.deleteAll();
 		keywordRepo.deleteAll();
+		faqImageRepo.deleteAll();
+		faqRepo.deleteAll();
 	}
 	
 	public FAQSubject saveFAQSubject(FAQSubject subj) {
@@ -106,8 +114,38 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 	}
 
 	@Override
-	public List<FAQSubject> loadAll() {
-		return FAQConverter.getInstance().faqSubjectEntityToDtoList(faqSubjectRepo.findAll());
+	public List<FAQSubjectEntity> loadAll() {
+		return faqSubjectRepo.findAll();
+	}
+
+	@Override
+	public List<FAQKeywordEntity> loadAllKeywords() {
+		return keywordRepo.findAll();
+	}
+
+	@Override
+	public List<FAQSubjectEntity> saveAllSubjects(List<FAQSubjectEntity> subjects) {
+		return faqSubjectRepo.saveAll(subjects);
+	}
+
+	@Override
+	public FAQEntity saveFAQ(FAQEntity faq) {
+		return faqRepo.save(faq) ;
+	}
+
+	@Override
+	public FAQImageEntity saveFAQImage(FAQImageEntity en) {
+		return faqImageRepo.save(en);
+	}
+
+	@Override
+	public FAQImageEntity getFAQImage(String id) {
+		return faqImageRepo.getOne(UUID.fromString(id));
+	}
+
+	@Override
+	public FAQKeywordEntity saveFAQkeyword(FAQKeywordEntity kw) {
+		return keywordRepo.save(kw);
 	}
 
 }

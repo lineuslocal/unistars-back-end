@@ -11,33 +11,25 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotBlank;
 
 import kr.lineus.unistars.entity.ApplicantAdditionalInfoAnswerEntity;
 import kr.lineus.unistars.entity.ApplicantSurveyAnswerEntity;
 import kr.lineus.unistars.entity.EventEntity;
+import lombok.Data;
 
+@Data
 public class Applicant {
 
 	@Id
 	@GeneratedValue
 	private String id;
-	private String username;
-	private String address;
-	private String email;
-	private String phone;
-	private String fullName;
+	private Event event;
+	private User user;
 	private LocalDateTime appliedDate;
 	private String state;
 	private int numberOfTickets=1;
-	
-	@ManyToOne
-	@JoinColumn(name = "event_id", nullable = false, updatable = false)
-	private EventEntity event;
-	
-	@OneToMany(mappedBy = "applicant", cascade =  CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ApplicantAdditionalInfoAnswerEntity> addtionalInfoAnswers = new HashSet<ApplicantAdditionalInfoAnswerEntity>();
-	
-	@OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Set<ApplicantSurveyAnswerEntity> surveyAnswers = new HashSet<ApplicantSurveyAnswerEntity>();
+	private Set<ApplicantAdditionalInfoAnswer> addtionalInfoAnswers = new HashSet<ApplicantAdditionalInfoAnswer>();	
+	private Set<ApplicantSurveyAnswer> surveyAnswers = new HashSet<ApplicantSurveyAnswer>();
 	
 }

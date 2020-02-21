@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -13,6 +14,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import kr.lineus.unistars.dto.ELevel;
@@ -45,5 +47,8 @@ public class UserEntity {
 				joinColumns = @JoinColumn(name = "user_id"), 
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<UserRoleEntity> userRoles = new ArrayList<UserRoleEntity>();
+	
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private UserImageEntity image;
 	
 }

@@ -18,7 +18,7 @@ public class SpringGlobalExceptionHandler {
 
 	@Autowired
     GeneralConfig config;
-		
+	 
 	@ExceptionHandler(AppException.class)
 	public ResponseEntity handleAppException(AppException ex) {
 		return new ResponseEntity<String>(ExceptionConfig.handleSecurity(new ErrorMessage(ex), config.ERROR_LEVEL).toString(), ex.getStatus());

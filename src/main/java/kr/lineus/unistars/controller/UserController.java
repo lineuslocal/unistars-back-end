@@ -41,7 +41,7 @@ import kr.lineus.unistars.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/user")
 public class UserController {
 
 	public static final Logger logger = LoggerFactory.getLogger(UserController.class);

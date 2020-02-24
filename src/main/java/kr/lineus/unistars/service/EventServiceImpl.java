@@ -11,10 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.lineus.unistars.converter.EventConverter;
 import kr.lineus.unistars.dto.EEventImageType;
-import kr.lineus.unistars.dto.Event;
-import kr.lineus.unistars.dto.EventCategory;
 import kr.lineus.unistars.entity.ApplicantEntity;
 import kr.lineus.unistars.entity.EventAdditionalInfoEntity;
 import kr.lineus.unistars.entity.EventCategoryEntity;
@@ -201,10 +198,21 @@ public class EventServiceImpl implements EventService {
 		return applicantRepo.findAllByUserId(userId);
 	}
 
+
 	@Override
-	public List<EventEntity> loadEventDetail(String eventId) {
+	public void deleteEvents(List<String> ids) {
+		eventRepo.deleteByIdIn(ids);
 		
-		return null;
+	}
+
+	@Override
+	public ApplicantEntity getApplicant(String applicantId) {
+		return applicantRepo.getOne(UUID.fromString(applicantId));
+	}
+
+	@Override
+	public void deleteApplicant(String applicantId) {
+		applicantRepo.deleteById(UUID.fromString(applicantId));
 	}
 
 }

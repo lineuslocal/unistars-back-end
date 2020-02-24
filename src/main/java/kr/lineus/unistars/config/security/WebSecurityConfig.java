@@ -47,13 +47,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		
 		http.cors().and().csrf().disable()
 			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/").permitAll()
+			.antMatchers("/", "/favicon.ico", "/css/**", "/js/**", "/images/**").permitAll()
+            .antMatchers("/v2/**").permitAll()
+            .antMatchers("/v3/**").permitAll()
+            .antMatchers("/h2/**").permitAll()
+            .antMatchers("/configuration/ui/**").permitAll()
+            .antMatchers("/swagger-resources/**").permitAll()
+            .antMatchers("/configuration/security/**").permitAll()
+            .antMatchers("/webjars/**").permitAll()
+            .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html", "/api-docs/**").permitAll()
+            .antMatchers("/api-docs/swagger-config").permitAll()
+			.antMatchers("/swagger-ui.html").permitAll()
 			.antMatchers("/health").permitAll()
-			.antMatchers("/api/user/**").permitAll()
+			.antMatchers("/api/user/**").permitAll() //TODO: close this temporary access
 			.antMatchers("/api/event/**").permitAll()
+			.antMatchers("/api/faq/**").permitAll()
 			.anyRequest().authenticated();
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

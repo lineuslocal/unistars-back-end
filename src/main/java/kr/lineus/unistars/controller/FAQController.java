@@ -1,6 +1,7 @@
 package kr.lineus.unistars.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +34,12 @@ import kr.lineus.unistars.dto.FAQImage;
 import kr.lineus.unistars.dto.FAQKeyword;
 import kr.lineus.unistars.dto.FAQSubject;
 import kr.lineus.unistars.dto.LoginRequest;
+import kr.lineus.unistars.dto.MessageResponse;
 import kr.lineus.unistars.entity.EventEntity;
 import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQImageEntity;
 import kr.lineus.unistars.entity.FAQKeywordEntity;
+import kr.lineus.unistars.entity.FAQSubjectEntity;
 import kr.lineus.unistars.exceptionhandler.AppException;
 import kr.lineus.unistars.exceptionhandler.AppExceptionCode;
 import kr.lineus.unistars.service.FAQService;
@@ -45,7 +48,7 @@ import kr.lineus.unistars.service.FAQService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/faq")
+@RequestMapping("/api/v1/faq")
 public class FAQController {
 	public static final Logger logger = LoggerFactory.getLogger(FAQController.class);
 	
@@ -60,24 +63,26 @@ public class FAQController {
 	
 	@GetMapping(value = "/list")
 	public ResponseEntity<?> loadAll() throws AppException {
-		logger.info("Loading all FAQs");
+		logger.info("Loading all FAQ data");
 		List<FAQSubject> subjects = FAQConverter.getInstance().faqSubjectEntityToDtoList(service.loadAll());
 		return new ResponseEntity<List<FAQSubject>>(subjects, HttpStatus.OK);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping(value = "/category")
+	public ResponseEntity<?> saveCategory(@Valid @RequestBody List<FAQSubject> subjectList){
+		logger.info("saving all FAQ data  {}", subjectList.toString());
+		List<FAQSubjectEntity> enList = FAQConverter.getInstance().faqSubjectDtoToEntityList(subjectList);
+		enList = service.saveAllSubjects(enList);
+		return new ResponseEntity<List<FAQSubject>>(FAQConverter.getInstance().faqSubjectEntityToDtoList(enList), HttpStatus.OK);
+		
+	}	
+	
 	@GetMapping(value = "/{faqId}")
 	public ResponseEntity<?> get(@RequestParam("faqId") String faqId) throws AppException {
-		logger.info("Getting FAQ");
+		logger.info("Getting FAQ id = {}" + faqId);
 		FAQEntity en = service.getFAQ(faqId);
 		return new ResponseEntity<FAQ>(FAQConverter.getInstance().faqEntityToDto(en), HttpStatus.OK);
-	}
-	
-	@PreAuthorize("hasRole('ADMIN')")
-	@PostMapping(value = "/saveCategories")
-	public ResponseEntity<?> saveCategories(@Valid @RequestBody List<FAQSubject> subjects) throws AppException {
-		logger.info("save subject list {}", subjects);
-		List<FAQSubject> result = FAQConverter.getInstance().faqSubjectEntityToDtoList(service.saveAllSubjects(FAQConverter.getInstance().faqSubjectDtoToEntityList(subjects)));
-		return new ResponseEntity<List<FAQSubject>>(result, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
@@ -141,7 +146,7 @@ public class FAQController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(value = "/keyword")
+	@GetMapping(value = "/keyword/list")
 	public ResponseEntity<?> loadAllKeywords() throws AppException {
 		logger.info("Loading all Keywords");
 		List<FAQKeyword> subjects = FAQConverter.getInstance().faqKeywordEntityToDtoList(service.loadAllKeywords());
@@ -158,6 +163,21 @@ public class FAQController {
 		
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping(value = "/keyword/{keywordid}")
+	public ResponseEntity<?> updateKeyword(@Valid @RequestBody FAQKeyword keyword){
+		logger.info("updating keyword {}", keyword);
+		FAQKeywordEntity kwEn = FAQConverter.getInstance().faqKeywordDtoToEntity(keyword);
+		kwEn = service.saveFAQkeyword(kwEn);
+		return new ResponseEntity<FAQKeyword>(FAQConverter.getInstance().faqKeywordEntityToDto(kwEn), HttpStatus.OK);
+		
+	}
 	
-	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping(value = "/keyword/delete")
+	public ResponseEntity<?> deleteKeywords(@Valid @RequestBody List<String> ids){
+		logger.info("Deleting keywords {}", String.join(",", ids));
+		service.deleteKeywords(ids);
+		return ResponseEntity.ok(new MessageResponse("Delete successfully!"));
+	}
 }

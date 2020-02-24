@@ -18,22 +18,22 @@ CREATE TABLE user_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
     file_type character varying(256),
-    user_id uuid NOT NULL REFERENCES faq (id),
+    user_id uuid NOT NULL REFERENCES "user" (id),
     data BLOB 
  );
 
 
 CREATE TABLE faq_subject (
     id uuid NOT NULL PRIMARY KEY,
-    name character varying NOT NULL,
-    kr_name character varying NOT NULL,
+    name character varying(200) NOT NULL,
+    kr_name character varying(200),
     note text
 );
 
 CREATE TABLE faq_category (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
-    kr_name character varying NOT NULL,
+    kr_name character varying(200),
     subject_id uuid NOT NULL REFERENCES faq_subject (id),
     note text
 );
@@ -41,7 +41,7 @@ CREATE TABLE faq_category (
 CREATE TABLE faq_product (
     id uuid NOT NULL PRIMARY KEY,
     name character varying(200) NOT NULL,
-    kr_name character varying NOT NULL,
+    kr_name character varying(200),
     category_id uuid NOT NULL REFERENCES faq_category (id),
     note text
 );
@@ -59,7 +59,7 @@ CREATE TABLE faq (
 CREATE TABLE faq_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
-    file_type character varying(256),
+    file_type character varying(128),
     faq_id uuid NOT NULL REFERENCES faq (id),
     data BLOB 
  );
@@ -102,7 +102,7 @@ CREATE TABLE event (
 CREATE TABLE event_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
-    file_type character varying(256),
+    file_type character varying(128),
     event_id uuid NOT NULL REFERENCES event (id),
     image_type character varying(256),
     data BLOB 
@@ -111,7 +111,7 @@ CREATE TABLE event_image (
 CREATE TABLE event_category_image (
     id uuid NOT NULL PRIMARY KEY,
     file_name character varying(4096),
-    file_type character varying(256),
+    file_type character varying(128),
     category_id uuid NOT NULL REFERENCES event_category (id),
     data BLOB 
  );

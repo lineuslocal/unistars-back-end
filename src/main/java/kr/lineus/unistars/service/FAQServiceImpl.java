@@ -2,31 +2,26 @@ package kr.lineus.unistars.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import kr.lineus.unistars.converter.EventConverter;
 import kr.lineus.unistars.converter.FAQConverter;
-import kr.lineus.unistars.dto.FAQ;
-import kr.lineus.unistars.dto.FAQCategory;
-import kr.lineus.unistars.dto.FAQImage;
-import kr.lineus.unistars.dto.FAQProduct;
-import kr.lineus.unistars.dto.FAQSubject;
-import kr.lineus.unistars.dto.FAQKeyword;
 import kr.lineus.unistars.dto.ELevel;
+import kr.lineus.unistars.dto.FAQSubject;
 import kr.lineus.unistars.entity.FAQCategoryEntity;
 import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQImageEntity;
+import kr.lineus.unistars.entity.FAQKeywordEntity;
 import kr.lineus.unistars.entity.FAQProductEntity;
 import kr.lineus.unistars.entity.FAQSubjectEntity;
-import kr.lineus.unistars.entity.FAQKeywordEntity;
 import kr.lineus.unistars.repository.FAQImageRepository;
 import kr.lineus.unistars.repository.FAQRepository;
 import kr.lineus.unistars.repository.FAQSubjectRepository;
@@ -146,6 +141,26 @@ public class FAQServiceImpl implements FAQService, ControllerTestingService {
 	@Override
 	public FAQKeywordEntity saveFAQkeyword(FAQKeywordEntity kw) {
 		return keywordRepo.save(kw);
+	}
+
+	@Override
+	public FAQEntity getFAQ(String id) {
+		return faqRepo.getOne(UUID.fromString(id));
+	}
+
+	@Override
+	public FAQSubjectEntity saveSubject(FAQSubjectEntity subj) {
+		return faqSubjectRepo.save(subj);
+	}
+
+	@Override
+	public FAQSubjectEntity getSubject(String id) {
+		return faqSubjectRepo.getOne(UUID.fromString(id));
+	}
+
+	@Override
+	public void deleteKeywords(@Valid List<String> ids) {
+		keywordRepo.deleteByIdIn(ids);
 	}
 
 }

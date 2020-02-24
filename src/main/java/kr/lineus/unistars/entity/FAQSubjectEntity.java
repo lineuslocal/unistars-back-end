@@ -23,6 +23,7 @@ public class FAQSubjectEntity {
 	@GeneratedValue
 	private UUID id;	
 	private String name;
+	private String krName;
 	@Column(length = 50000)
 	private String note;
 	

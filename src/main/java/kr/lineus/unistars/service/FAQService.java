@@ -2,6 +2,8 @@ package kr.lineus.unistars.service;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import kr.lineus.unistars.dto.FAQKeyword;
 import kr.lineus.unistars.entity.FAQEntity;
 import kr.lineus.unistars.entity.FAQImageEntity;
@@ -26,4 +28,9 @@ public interface FAQService extends ControllerTestingService {
 	
 	FAQKeywordEntity saveFAQkeyword(FAQKeywordEntity kw);
 	
+	FAQSubjectEntity saveSubject(FAQSubjectEntity subj);
+	
+	FAQSubjectEntity getSubject(String id);
+
+	void deleteKeywords(@Valid List<String> ids);
 }

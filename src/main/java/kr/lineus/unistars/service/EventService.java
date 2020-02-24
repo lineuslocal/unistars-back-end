@@ -28,8 +28,6 @@ public interface EventService extends ControllerTestingService {
 	
 	List<ApplicantEntity> getApplicantsByUserId(String userId);
 
-	List<EventEntity> loadEventDetail(String eventId);
-
 	void deleteEvents(List<String> ids);
 	
 	ApplicantEntity getApplicant(String applicantId);

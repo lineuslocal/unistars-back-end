@@ -58,7 +58,7 @@ import kr.lineus.unistars.service.UserService;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/event")
+@RequestMapping("/api/v1/event")
 public class EventController {
 	public static final Logger logger = LoggerFactory.getLogger(EventController.class);
 
@@ -97,8 +97,8 @@ public class EventController {
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
-	@PutMapping
-	public ResponseEntity<?> updateEvent(@Valid @RequestBody Event eventRequest, 
+	@PutMapping(value = "/{eventId}")
+	public ResponseEntity<?> updateEvent(@PathVariable("eventId") String eventId, @Valid @RequestBody Event eventRequest, 
 			@RequestParam("profile_file") MultipartFile profileFile, 
 			@RequestParam("reg_file") MultipartFile regFile, 
 			@RequestParam("guide_file") MultipartFile guideFile, 
@@ -108,7 +108,7 @@ public class EventController {
 		
 		//fix: don't count on this list, it is just for reading not saving
 		eventRequest.getImages().clear();
-		final EventEntity eEn = eventService.getEvent(eventRequest.getId());
+		final EventEntity eEn = eventService.getEvent(eventId);
 		if(eEn!=null) {
 			eEn.setEventName(eventRequest.getEventName());
 			eEn.setLecturer(eventRequest.getLecturer());
@@ -168,7 +168,7 @@ public class EventController {
 	}
 
 	@PreAuthorize("hasRole('ADMIN')")
-	@DeleteMapping
+	@PostMapping(value="/delete")
 	public ResponseEntity<?> deleteEvents(@Valid @RequestBody List<String> ids){
 		logger.info("Deleting events {}", String.join(",", ids));
 		eventService.deleteEvents(ids);

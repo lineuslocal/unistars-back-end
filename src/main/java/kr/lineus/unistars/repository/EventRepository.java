@@ -13,4 +13,5 @@ import kr.lineus.unistars.entity.EventEntity;
 @Repository
 public interface EventRepository extends JpaRepository<EventEntity, UUID> {	
 	public List<EventEntity> findAllByCategoryId(UUID catId);
+	public void deleteByIdIn(List<String> ids);
 }

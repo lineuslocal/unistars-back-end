@@ -12,6 +12,8 @@ public interface FAQService extends ControllerTestingService {
 
 	List<FAQSubjectEntity> loadAll();
 	
+	FAQEntity getFAQ(String id);
+	
 	List<FAQKeywordEntity> loadAllKeywords();
 	
 	List<FAQSubjectEntity> saveAllSubjects(List<FAQSubjectEntity> subj);

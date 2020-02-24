@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -57,24 +58,23 @@ public class FAQController {
 		service.beforeEveryTest();	
 	}	
 	
-	@GetMapping(value = "/")
+	@GetMapping(value = "/list")
 	public ResponseEntity<?> loadAll() throws AppException {
 		logger.info("Loading all FAQs");
 		List<FAQSubject> subjects = FAQConverter.getInstance().faqSubjectEntityToDtoList(service.loadAll());
 		return new ResponseEntity<List<FAQSubject>>(subjects, HttpStatus.OK);
 	}
 	
-	@PreAuthorize("hasRole('ADMIN')")
-	@GetMapping(value = "/keyword")
-	public ResponseEntity<?> loadAllKeywords() throws AppException {
-		logger.info("Loading all Keywords");
-		List<FAQKeyword> subjects = FAQConverter.getInstance().faqKeywordEntityToDtoList(service.loadAllKeywords());
-		return new ResponseEntity<List<FAQKeyword>>(subjects, HttpStatus.OK);
+	@GetMapping(value = "/{faqId}")
+	public ResponseEntity<?> get(@RequestParam("faqId") String faqId) throws AppException {
+		logger.info("Getting FAQ");
+		FAQEntity en = service.getFAQ(faqId);
+		return new ResponseEntity<FAQ>(FAQConverter.getInstance().faqEntityToDto(en), HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/saveCategories")
-	public ResponseEntity<?> saveSubject(@Valid @RequestBody List<FAQSubject> subjects) throws AppException {
+	public ResponseEntity<?> saveCategories(@Valid @RequestBody List<FAQSubject> subjects) throws AppException {
 		logger.info("save subject list {}", subjects);
 		List<FAQSubject> result = FAQConverter.getInstance().faqSubjectEntityToDtoList(service.saveAllSubjects(FAQConverter.getInstance().faqSubjectDtoToEntityList(subjects)));
 		return new ResponseEntity<List<FAQSubject>>(result, HttpStatus.OK);
@@ -86,13 +86,6 @@ public class FAQController {
 		logger.info("saving FAQ {}", faq);
 		
 		FAQEntity en = FAQConverter.getInstance().faqDtoToEntity(faq);
-		faq.getImages().stream().forEach(i ->  {
-			FAQImageEntity img = service.getFAQImage(i.getId());
-			if(img!=null) {
-				en.addImage(img);
-			}
-		});
-		
 		Arrays.asList(files)
 	                .stream()
 	                .forEach(file -> {   
@@ -112,9 +105,49 @@ public class FAQController {
 	    
 		FAQEntity result = service.saveFAQ(en);
 		
-		return new ResponseEntity<FAQEntity>(result, HttpStatus.OK);
+		return new ResponseEntity<FAQ>(FAQConverter.getInstance().faqEntityToDto(result), HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateFaq(@Valid @RequestBody FAQ faq, @RequestParam("id") String id, @RequestParam("files") MultipartFile[] files) throws AppException {
+		logger.info("saving FAQ {}", faq);
+		
+		FAQEntity en = service.getFAQ(id);
+		if(en==null) {
+			throw AppExceptionCode.FAQ_NOTFOUND_400_6000;
+		} 
+		en.getImages().clear();
+		Arrays.asList(files)
+	                .stream()
+	                .forEach(file -> {   
+	                	String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	                	try {	                	
+	                		FAQImageEntity img = new FAQImageEntity();   
+	                		img.setFileName(fileName);
+	                		img.setFileType(file.getContentType());
+	                		img.setData(file.getBytes());
+	                		img.setFaq(en);
+	                		service.saveFAQImage(img);
+	                	} 
+	                	catch(IOException ex) {
+	                		ex.printStackTrace();
+	                	} 
+	                });
+	    
+		FAQEntity result = service.saveFAQ(en);
+		
+		return new ResponseEntity<FAQ>(FAQConverter.getInstance().faqEntityToDto(result), HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping(value = "/keyword")
+	public ResponseEntity<?> loadAllKeywords() throws AppException {
+		logger.info("Loading all Keywords");
+		List<FAQKeyword> subjects = FAQConverter.getInstance().faqKeywordEntityToDtoList(service.loadAllKeywords());
+		return new ResponseEntity<List<FAQKeyword>>(subjects, HttpStatus.OK);
+	}
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping(value = "/keyword")
 	public ResponseEntity<?> saveKeyword(@Valid @RequestBody FAQKeyword keyword){

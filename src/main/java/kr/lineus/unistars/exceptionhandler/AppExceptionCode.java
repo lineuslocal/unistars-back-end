@@ -18,6 +18,10 @@ public class AppExceptionCode {
 	//EVENT
 	public static AppException EVENT_NOTFOUND_400_5000 = new AppException(HttpStatus.BAD_REQUEST, 5000, "Event not found.", "", "");
 	public static AppException EVENT_IMAGETYPENOTFOUND_400_5001 = new AppException(HttpStatus.BAD_REQUEST, 5001, "The type parameter must be one of these values: Profile, Reg, Guide, Lecture.", "", "");
+	public static AppException EVENT_APPLICANT_NOTFOUND_400_5002 = new AppException(HttpStatus.BAD_REQUEST, 5002, "Applicant not found.", "", "");
+	
+	//FAQ
+	public static AppException FAQ_NOTFOUND_400_6000 = new AppException(HttpStatus.BAD_REQUEST, 6000, "FAQ item not found.", "", "");
 	
 	//COMMON
 	public static AppException COMMON_FILE_INVALIDPATH_400_9000 = new AppException(HttpStatus.BAD_REQUEST, 9000, "Filename contains invalid path sequence %s", "","");

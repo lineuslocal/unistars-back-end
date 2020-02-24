@@ -21,8 +21,6 @@ import lombok.Data;
 @Data
 public class Applicant {
 
-	@Id
-	@GeneratedValue
 	private String id;
 	private Event event;
 	private User user;

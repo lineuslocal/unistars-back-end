@@ -1,6 +1,6 @@
 package kr.lineus.unistars.dto;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,12 +23,12 @@ public class Event {
 	@Positive
 	private int currentParticipant;
 	@PastOrPresent
-	private LocalTime startDatetime;
-	private LocalTime endDatetime;
-	private LocalTime startApplyDatetime;
-	private LocalTime endApplyDatetime;
+	private LocalDateTime startDatetime;
+	private LocalDateTime endDatetime;
+	private LocalDateTime startApplyDatetime;
+	private LocalDateTime endApplyDatetime;
 	private String description;
 	private Set<EventImage> images = new HashSet<>();
 	private Set<EventAdditionalInfo> additionalInfos = new HashSet<EventAdditionalInfo>();
-	private Set<EventSurvey> eventSurveys = new HashSet<EventSurvey>();
+	private Set<EventSurvey> surveys = new HashSet<EventSurvey>();
 }
